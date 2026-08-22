@@ -1,0 +1,119 @@
+# ==============================
+# Frontend - Next.js
+# ==============================
+
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Environment variables
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Next.js generated files
+frontend/next-env.d.ts
+
+
+# ==============================
+# Backend - Python
+# ==============================
+
+backend/__pycache__/
+backend/**/*.py[cod]
+backend/*.py[cod]
+
+# Python virtual environments
+backend/venv/
+backend/.venv/
+backend/env/
+backend/.env/
+
+# Python cache
+**/__pycache__/
+**/*.pyc
+
+
+# ==============================
+# ML Models
+# ==============================
+
+# Trained model files
+backend/models/*.keras
+backend/models/*.h5
+backend/models/*.hdf5
+backend/models/*.weights.h5
+
+# Generated model files
+backend/models/
+
+
+# ==============================
+# Dataset
+# ==============================
+
+# Do NOT upload the large plant disease dataset
+backend/New Plant Diseases Dataset(Augmented)/
+
+
+# ==============================
+# Generated ML files
+# ==============================
+
+backend/models/class_names.json
+
+# Training outputs
+backend/logs/
+backend/checkpoints/
+backend/runs/
+
+
+# ==============================
+# OS / Editor
+# ==============================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Python
+.pytest_cache/
+.mypy_cache/
+
+
+# ==============================
+# Environment / Secrets
+# ==============================
+
+.env
+.env.local
+.env.*.local
+
+# API keys / secrets
+*.key
+*.pem
+
+
+# ==============================
+# Logs
+# ==============================
+
+*.log
+
+
+# ==============================
+# Temporary files
+# ==============================
+
+*.tmp
+*.temp
+*.bak
