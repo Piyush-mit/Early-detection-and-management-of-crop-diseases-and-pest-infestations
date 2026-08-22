@@ -1,0 +1,104 @@
+# ==============================
+# Python cache
+# ==============================
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+
+# ==============================
+# Virtual environments
+# ==============================
+
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+
+# ==============================
+# Environment variables
+# ==============================
+
+.env
+.env.*
+!.env.example
+
+
+# ==============================
+# Plant Disease Dataset
+# ==============================
+
+New Plant Diseases Dataset(Augmented)/
+
+
+# ==============================
+# Trained Models
+# ==============================
+
+models/
+*.keras
+*.h5
+*.hdf5
+*.weights.h5
+
+
+# ==============================
+# Training / Experiment Outputs
+# ==============================
+
+logs/
+checkpoints/
+runs/
+wandb/
+tensorboard/
+
+
+# ==============================
+# Python testing / tooling
+# ==============================
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+
+# ==============================
+# Jupyter
+# ==============================
+
+.ipynb_checkpoints/
+
+
+# ==============================
+# Generated files
+# ==============================
+
+*.log
+*.tmp
+*.temp
+*.bak
+
+
+# ==============================
+# OS files
+# ==============================
+
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+
+# ==============================
+# IDE
+# ==============================
+
+.vscode/
+.idea/
