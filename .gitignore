@@ -1,119 +1,71 @@
-# ==============================
-# Frontend - Next.js
-# ==============================
 
-frontend/node_modules/
-frontend/.next/
-frontend/out/
-
-# Environment variables
-frontend/.env
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
-
-# Next.js generated files
-frontend/next-env.d.ts
 
 
 # ==============================
-# Backend - Python
+# Python
 # ==============================
 
-backend/__pycache__/
-backend/**/*.py[cod]
-backend/*.py[cod]
+__pycache__/
+*.py[cod]
 
-# Python virtual environments
 backend/venv/
 backend/.venv/
 backend/env/
-backend/.env/
-
-# Python cache
-**/__pycache__/
-**/*.pyc
 
 
 # ==============================
-# ML Models
+# Plant Disease Dataset
 # ==============================
 
-# Trained model files
-backend/models/*.keras
-backend/models/*.h5
-backend/models/*.hdf5
-backend/models/*.weights.h5
-
-# Generated model files
-backend/models/
-
-
-# ==============================
-# Dataset
-# ==============================
-
-# Do NOT upload the large plant disease dataset
 backend/New Plant Diseases Dataset(Augmented)/
 
 
 # ==============================
-# Generated ML files
+# Trained ML Models
 # ==============================
 
-backend/models/class_names.json
+backend/models/
+backend/*.keras
+backend/*.h5
+backend/*.hdf5
+backend/*.weights.h5
 
-# Training outputs
+
+# ==============================
+# ML / Training Outputs
+# ==============================
+
 backend/logs/
 backend/checkpoints/
 backend/runs/
 
 
 # ==============================
-# OS / Editor
-# ==============================
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# macOS
-.DS_Store
-
-# VS Code
-.vscode/
-
-# Python
-.pytest_cache/
-.mypy_cache/
-
-
-# ==============================
-# Environment / Secrets
+# Environment Variables
 # ==============================
 
 .env
 .env.local
-.env.*.local
-
-# API keys / secrets
-*.key
-*.pem
+*.env
 
 
 # ==============================
-# Logs
+# IDE / OS
+# ==============================
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+
+# ==============================
+# Logs / Temporary Files
 # ==============================
 
 *.log
-
-
-# ==============================
-# Temporary files
-# ==============================
-
 *.tmp
 *.temp
 *.bak
