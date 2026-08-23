@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 from PIL import Image
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-
+# evaluates the model’s accuracy on manually selected test images by comparing predicted classes with the expected classes derived from their filenames.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 MODEL_PATH = os.path.join(
