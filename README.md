@@ -1,280 +1,233 @@
-# 🌿 Plant Disease Detection
+# 🌿 LeafLens AI
 
-A plant disease detection prototype that uses a **TensorFlow/Keras EfficientNetB0 model** to identify plant diseases from leaf images. The system provides a **Next.js frontend** for image submission and a **FastAPI backend** that performs model inference.
-
-## 🚀 Current Prototype
-
-The current prototype supports:
-
-- 📷 Uploading a plant leaf image
-- 🤖 Disease classification using EfficientNetB0
-- 🌱 **38 plant disease/health classes**
-- 📊 Top-3 predictions with confidence scores
-- ⚡ FastAPI inference API
-- 🖥️ Next.js App Router frontend
-- 🔥 GPU-accelerated model training using mixed precision
-- 📈 Model evaluation using validation data and classification metrics
+![Next.js](https://img.shields.io/badge/Next.js-App%20Router-black?logo=next.js)
+![React](https://img.shields.io/badge/React-19-blue?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript)
+![Python](https://img.shields.io/badge/Python-3.10+-yellow?logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-ML-FF6F00?logo=tensorflow)
+![Keras](https://img.shields.io/badge/Keras-Deep%20Learning-D00000?logo=keras)
+![EfficientNet](https://img.shields.io/badge/EfficientNetB0-Image%20Classification-blueviolet)
+![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-Styling-cyan?logo=tailwindcss)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ---
 
-## 🧠 Machine Learning Model
+## 📌 Overview
 
-The model is based on:
+**LeafLens AI** is an AI-powered plant disease detection system that identifies plant diseases from leaf images using **deep learning and computer vision**.
 
-**EfficientNetB0 + Transfer Learning**
+The project combines a modern **Next.js frontend** with a **FastAPI machine learning backend**. Users can upload a leaf image, which is processed by a trained **EfficientNetB0** model and classified into one of **38 plant disease or healthy classes**.
 
-### Model Configuration
+The current prototype focuses on building a reliable end-to-end pipeline from image upload to AI-powered prediction while keeping the architecture modular enough for future scaling.
 
-| Property | Value |
-|---|---|
-| Architecture | EfficientNetB0 |
-| Input Size | 224 × 224 × 3 |
-| Number of Classes | 38 |
-| Optimizer | Adam |
-| Loss | Sparse Categorical Crossentropy |
-| Precision | Mixed Float16 |
+---
 
-The model was trained in two phases.
+## ✨ Features
+
+### 🌿 AI Plant Disease Detection
+
+- **Image-based disease detection:** Upload plant leaf images for disease analysis.
+- **EfficientNetB0 classification:** Uses an ImageNet-pretrained EfficientNetB0 model.
+- **38-class classification:** Supports 38 plant disease and healthy classes.
+- **Confidence score:** Displays the confidence of the predicted class.
+- **Top-3 predictions:** Shows the three most likely predictions with confidence values.
+
+### 🖼️ Image Upload & Processing
+
+- Drag-and-drop image upload.
+- Image preview before prediction.
+- Image metadata display.
+- Automatic image conversion to RGB.
+- Image resizing to `224 × 224`.
+- Loading and prediction states.
+- Error handling.
+- Reset and re-upload functionality.
+
+### 🧠 Machine Learning Pipeline
+
+- Transfer learning using **ImageNet-pretrained EfficientNetB0**.
+- Two-phase training:
+  - Feature extraction
+  - Fine-tuning
+- Data augmentation for better generalization.
+- Class weighting for handling class imbalance.
+- Mixed-precision training for improved GPU efficiency.
+- Early stopping to reduce overfitting.
+- Learning-rate reduction when validation performance plateaus.
+- Automatic checkpointing of the best model.
+
+### 🔌 FastAPI Inference Backend
+
+- Dedicated `/predict` API endpoint.
+- Accepts images using `multipart/form-data`.
+- Loads the trained Keras model during server startup.
+- Performs image preprocessing and inference.
+- Returns structured JSON predictions.
+
+### 🎨 Modern Frontend
+
+- Built using **Next.js App Router**.
+- Responsive design for desktop and mobile.
+- Clean upload and prediction workflow.
+- Confidence bars for predictions.
+- User-friendly error handling.
+- Centralized API integration.
+
+---
+
+## 📸 Screenshots
+
+### 🏠 Home Page
+
+![LeafLens AI Home Page](./frontend/public/landingpage.png)
+
+### 📤 Image Upload and predicted results
+
+![LeafLens AI Upload](./frontend/public/response.png)
+
+
+## 🧠 Machine Learning Architecture
+
+The current model follows this pipeline:
+
+```text
+Input Image
+224 × 224 × 3
+       ↓
+Data Augmentation
+       ↓
+EfficientNetB0
+ImageNet Pretrained
+       ↓
+Global Average Pooling
+       ↓
+Dropout (30%)
+       ↓
+Dense Layer
+38 Classes
+       ↓
+Softmax
+       ↓
+Disease Probabilities
+```
+
+### 🔬 Training Strategy
+
+The model is trained in two stages.
 
 ### Phase 1 — Feature Extraction
 
-The ImageNet-pretrained EfficientNetB0 backbone is frozen while the classification head is trained.
-
-```text
-Learning rate: 1e-3
-Epochs:        5
-```
+The pretrained EfficientNetB0 backbone is frozen while the newly added classification layer learns to classify plant diseases.
 
 ### Phase 2 — Fine-Tuning
 
-The final 30 layers of EfficientNetB0 are made trainable.
-
-```text
-Learning rate: 1e-5
-Epochs:        10
-```
-
-Class weights were used to handle differences in class distribution.
+The later layers of EfficientNetB0 are unfrozen and trained using a smaller learning rate so that the pretrained features can adapt to plant disease patterns.
 
 ---
 
-## 📊 Model Performance
+## 🖼️ Data Augmentation
 
-The model achieved approximately:
+The training pipeline applies:
 
-```text
-Validation Accuracy: 98.07%
-Validation Images:  17,572
-Correct Predictions: 17,232
-Incorrect Predictions: 340
-```
+- Random horizontal and vertical flipping
+- Random rotation
+- Random zoom
+- Random translation
+- Random contrast
+- Random brightness
 
-Some of the more difficult classes include:
+These augmentations help the model handle variations in:
 
-- `Tomato___Target_Spot`
-- `Tomato___Early_blight`
-- `Tomato___Late_blight`
-- `Tomato___Septoria_leaf_spot`
-- `Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot`
+- Leaf orientation
+- Position
+- Scale
+- Lighting
+- Contrast
 
-> **Note:** The 98.07% result represents validation performance on the dataset distribution used during development. Performance on external real-world images can differ because of differences in lighting, backgrounds, image quality, camera characteristics, and other domain factors.
-
----
-
-## 🌱 Supported Classes
-
-The model currently predicts among these **38 classes**:
-
-```text
-Apple___Apple_scab
-Apple___Black_rot
-Apple___Cedar_apple_rust
-Apple___healthy
-Blueberry___healthy
-Cherry_(including_sour)___Powdery_mildew
-Cherry_(including_sour)___healthy
-Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot
-Corn_(maize)___Common_rust_
-Corn_(maize)___Northern_Leaf_Blight
-Corn_(maize)___healthy
-Grape___Black_rot
-Grape___Esca_(Black_Measles)
-Grape___Leaf_blight_(Isariopsis_Leaf_Spot)
-Grape___healthy
-Orange___Haunglongbing_(Citrus_greening)
-Peach___Bacterial_spot
-Peach___healthy
-Pepper,_bell___Bacterial_spot
-Pepper,_bell___healthy
-Potato___Early_blight
-Potato___Late_blight
-Potato___healthy
-Raspberry___healthy
-Soybean___healthy
-Squash___Powdery_mildew
-Strawberry___Leaf_scorch
-Strawberry___healthy
-Tomato___Bacterial_spot
-Tomato___Early_blight
-Tomato___Late_blight
-Tomato___Leaf_Mold
-Tomato___Septoria_leaf_spot
-Tomato___Spider_mites Two-spotted_spider_mite
-Tomato___Target_Spot
-Tomato___Tomato_Yellow_Leaf_Curl_Virus
-Tomato___Tomato_mosaic_virus
-Tomato___healthy
-```
+This is especially important for improving performance on real-world images.
 
 ---
 
-## 🏗️ System Architecture
+## ⚖️ Class Weighting
+
+The training pipeline uses Scikit-learn's:
+
+```python
+compute_class_weight()
+```
+
+to calculate balanced class weights.
+
+This helps prevent the model from becoming biased toward classes that contain more training examples.
+
+---
+
+## ⚡ Training Optimizations
+
+### Mixed Precision
+
+```python
+mixed_precision.set_global_policy("mixed_float16")
+```
+
+Mixed precision reduces GPU memory usage and can improve training speed on compatible GPUs.
+
+### GPU Memory Growth
+
+TensorFlow dynamically allocates GPU memory instead of reserving all available memory at startup.
+
+### Dataset Prefetching
+
+```python
+tf.data.AUTOTUNE
+```
+
+is used to prepare batches efficiently while the model is training.
+
+---
+
+## 🛡️ Overfitting Prevention
+
+The training pipeline uses several techniques:
+
+- **Dropout — 30%**
+- **EarlyStopping**
+- **ReduceLROnPlateau**
+- **ModelCheckpoint**
+- Data augmentation
+- Transfer learning
+
+The best-performing model based on validation accuracy is saved as:
 
 ```text
-                    User
-                     │
-                     ▼
-            ┌─────────────────┐
-            │ Next.js Frontend│
-            │   App Router    │
-            └────────┬────────┘
-                     │
-                Image Upload
-                     │
-                     ▼
-            ┌─────────────────┐
-            │    FastAPI      │
-            │    /predict     │
-            └────────┬────────┘
-                     │
-                     ▼
-            ┌─────────────────┐
-            │   predict.py    │
-            │ Image Processing│
-            └────────┬────────┘
-                     │
-                     ▼
-            ┌─────────────────┐
-            │   EfficientNet  │
-            │      B0         │
-            └────────┬────────┘
-                     │
-                     ▼
-             38 Class Scores
-                     │
-                     ▼
-            Top 3 Predictions
-                     │
-                     ▼
-            Next.js Result UI
+best_plant_disease_model.keras
 ```
 
 ---
 
-## 📁 Project Structure
+## 📊 Model Output
 
-```text
-project/
-│
-├── frontend/
-│   ├── app/
-│   │   ├── page.tsx
-│   │   └── ...
-│   ├── public/
-│   ├── next.config.ts
-│   └── package.json
-│
-├── backend/
-│   ├── main.py
-│   ├── predict.py
-│   ├── evaluate.py
-│   ├── train.py
-│   │
-│   ├── models/
-│   │   ├── best_plant_disease_model.keras
-│   │   ├── plant_disease_model.keras
-│   │   └── class_names.json
-│   │
-│   └── test/
-│       └── external test images
-│
-└── README.md
-```
+The model produces probabilities for all 38 classes.
 
----
-
-# ⚙️ Backend
-
-The backend is built using **FastAPI**.
-
-### Start the API
-
-From the backend directory:
-
-```bash
-conda activate tf_gpu
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-The API will be available at:
-
-```text
-http://127.0.0.1:8000
-```
-
-API documentation:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
----
-
-## 🔌 API Endpoints
-
-### `GET /`
-
-Checks whether the API is running.
-
-Example response:
+Example:
 
 ```json
 {
-  "message": "Plant Disease Detection API"
-}
-```
-
-### `POST /predict`
-
-Accepts an image and returns the predicted disease.
-
-Request:
-
-```text
-multipart/form-data
-file: <image>
-```
-
-Example response:
-
-```json
-{
-  "success": true,
-  "filename": "leaf.jpg",
-  "disease": "Apple___Cedar_apple_rust",
-  "confidence": 98.52,
+  "disease": "Tomato___Early_blight",
+  "confidence": 98.42,
   "top_predictions": [
     {
-      "disease": "Apple___Cedar_apple_rust",
-      "confidence": 98.52
+      "disease": "Tomato___Early_blight",
+      "confidence": 98.42
     },
     {
-      "disease": "Apple___Apple_scab",
+      "disease": "Tomato___Late_blight",
       "confidence": 0.91
     },
     {
-      "disease": "Apple___Black_rot",
-      "confidence": 0.57
+      "disease": "Tomato___Leaf_Mold",
+      "confidence": 0.31
     }
   ]
 }
@@ -282,144 +235,420 @@ Example response:
 
 ---
 
-# 🖥️ Frontend
+## 🔌 API
 
-The frontend uses:
+### `POST /predict`
 
-- Next.js
-- React
-- TypeScript
-- App Router
+Accepts a plant leaf image and returns the model prediction.
 
-The frontend allows the user to:
-
-1. Select a leaf image
-2. Preview the image
-3. Submit the image for analysis
-4. Receive the prediction from FastAPI
-5. Display the predicted disease
-6. Display confidence
-7. Display alternative top predictions
-
----
-
-# 🔗 Frontend → Backend
-
-The intended flow is:
+### Request
 
 ```text
-Next.js
-   │
-   │ POST /api/predict
-   ▼
-Next.js Rewrite
-   │
-   │ http://127.0.0.1:8000/predict
-   ▼
-FastAPI
-   │
-   ▼
-EfficientNetB0
-   │
-   ▼
-Prediction
+Content-Type: multipart/form-data
+
+file = <leaf image>
 ```
 
-Using a Next.js rewrite simplifies local development between the Next.js frontend and FastAPI backend.
+### Response
+
+```json
+{
+  "success": true,
+  "filename": "leaf.jpg",
+  "disease": "Tomato___Early_blight",
+  "confidence": 98.42,
+  "top_predictions": [
+    {
+      "disease": "Tomato___Early_blight",
+      "confidence": 98.42
+    }
+  ]
+}
+```
 
 ---
 
-# 🧪 Model Testing
+## 🛠️ Tech Stack
 
-The model was evaluated using the validation dataset with:
+### Frontend
+
+- Next.js — App Router
+- React 19
+- TypeScript
+- Tailwind CSS
+
+### Backend
+
+- Python
+- FastAPI
+- Uvicorn
+- Pillow
+
+### Machine Learning
+
+- TensorFlow
+- Keras
+- EfficientNetB0
+- NumPy
+- Scikit-learn
+
+### Model Training
+
+- Transfer Learning
+- Fine-Tuning
+- Data Augmentation
+- Mixed Precision
+- Class Weighting
+
+---
+
+## 📂 Project Structure
+
+```text
+SIH/
+│
+├── backend/
+│   │
+│   ├── main.py
+│   ├── predict.py
+│   ├── train.py
+│   ├── evaluate.py
+│   ├── evaluate_vald.py
+│   │
+│   ├── models/
+│   │   ├── best_plant_disease_model.keras
+│   │   ├── plant_disease_model.keras
+│   │   └── class_names.json
+│   │
+│   └── test/
+│
+├── frontend/
+│   │
+│   ├── app/
+│   │
+│   ├── components/
+│   │   └── leaf-diagnosis.tsx
+│   │
+│   ├── lib/
+│   │   └── prediction-api.ts
+│   │
+│   ├── .env.example
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone <your-repository-url>
+
+cd SIH
+```
+
+---
+
+### 2. Backend Setup
+
+Navigate to the backend:
+
+```bash
+cd backend
+```
+
+Create a Python virtual environment:
+
+```bash
+python -m venv venv
+```
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Linux / Ubuntu
+
+```bash
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start the FastAPI server:
+
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Backend:
+
+```text
+http://127.0.0.1:8000/
+```
+
+---
+
+### 3. Frontend Setup
+
+Open another terminal:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+bun install
+```
+
+Start the development server:
+
+```bash
+bun run dev
+```
+
+Frontend:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## 🧪 Testing the Model
+
+The project contains evaluation scripts for checking model performance.
+
+### Validation Dataset Evaluation
+
+```bash
+python evaluate_vald.py
+```
+
+This evaluates the model against the validation dataset and generates:
 
 - Accuracy
-- Precision
-- Recall
-- F1-score
-- Confusion Matrix
+- Classification report
+- Confusion matrix
 
-Current validation result:
+### Test Image Evaluation
 
-```text
-Accuracy: 98.07%
+```bash
+python evaluate.py
 ```
 
-A small external test set was also used during development. However, it is **not a balanced 38-class evaluation dataset**, so it should not be used as the primary measure of model quality.
+This evaluates individual images stored inside the `test` directory and reports:
 
-A future improvement is to create a proper external evaluation dataset containing samples from **all 38 classes**.
-
----
-
-# 🔮 Future Improvements
-
-## Machine Learning
-
-- [ ] Create a proper external test dataset covering all 38 classes
-- [ ] Evaluate real-world generalization
-- [ ] Analyze confusion between visually similar diseases
-- [ ] Add confidence thresholds
-- [ ] Improve performance on difficult classes
-- [ ] Experiment with additional architectures
-
-## Application
-
-- [ ] Improve prediction/result UI
-- [ ] Add disease descriptions
-- [ ] Add symptoms
-- [ ] Add causes
-- [ ] Add treatment/prevention suggestions
-- [ ] Add upload history
-- [ ] Improve mobile responsiveness
-- [ ] Add image quality validation
-- [ ] Add low-confidence prediction warnings
-
-## Deployment
-
-- [ ] Deploy Next.js frontend
-- [ ] Deploy FastAPI backend
-- [ ] Optimize model inference
-- [ ] Containerize backend
-- [ ] Configure production networking
-- [ ] Add monitoring
+- Actual class
+- Predicted class
+- Confidence
+- Overall test accuracy
+- Classification report
+- Confusion matrix
 
 ---
 
-# ⚠️ Disclaimer
+## 📈 Current Prototype
 
-This project is a **prototype for educational and research purposes**.
+The current prototype provides:
 
-Model predictions should not be treated as a definitive agricultural diagnosis. Real-world performance may differ from validation performance, particularly for images with different lighting, backgrounds, camera quality, plant varieties, or disease stages.
+- ✅ End-to-end image upload
+- ✅ Next.js frontend
+- ✅ FastAPI backend
+- ✅ EfficientNetB0 classification
+- ✅ 38 disease/healthy classes
+- ✅ Top-3 predictions
+- ✅ Confidence scores
+- ✅ Data augmentation
+- ✅ Transfer learning
+- ✅ Fine-tuning
+- ✅ Class weighting
+- ✅ Mixed precision
+- ✅ Error handling
+- ✅ Responsive UI
+
+The current validation accuracy is approximately **98.07%** on the current validation dataset.
+
+> **Note:** Validation accuracy does not guarantee the same performance on real-world images. Images with complex backgrounds, unusual lighting, blur, or multiple leaves can be more challenging.
 
 ---
 
-# 🛠️ Technologies
+## ⚠️ Current Limitations
 
-| Component | Technology |
-|---|---|
-| Frontend | Next.js |
-| UI | React + TypeScript |
-| Backend | FastAPI |
-| ML Framework | TensorFlow / Keras |
-| Model | EfficientNetB0 |
-| Image Processing | Pillow |
-| Data Processing | NumPy |
-| ML Evaluation | Scikit-learn |
-| Training | GPU + Mixed Precision |
-| API | REST / JSON |
+The current model can struggle with:
+
+- Complex backgrounds
+- Poor lighting
+- Unusual lighting conditions
+- Multiple leaves in one image
+- Very small leaves
+- Blurry images
+- Image noise
+- Objects other than the target leaf
+
+Additionally, a high softmax confidence score does not necessarily guarantee that the prediction is correct.
 
 ---
 
-# 📌 Current Status
+## 🔮 Future Improvements
 
-**Prototype — Working**
+### 🌱 Improved Real-World Robustness
+
+The next training iterations will include more diverse field images containing:
+
+- Complex backgrounds
+- Different lighting conditions
+- Different camera qualities
+- Different leaf orientations
+- Different distances and angles
+
+### ✂️ Leaf Segmentation
+
+A future version can isolate the leaf before classification:
 
 ```text
-Model Training        ✅
-38-Class Prediction   ✅
-Validation            ✅ 98.07%
-FastAPI Backend       ✅
-Image Upload API      ✅
-Next.js Frontend      🚧
-Production Deployment ⏳
+User Image
+    ↓
+Leaf Detection / Segmentation
+    ↓
+Background Removal
+    ↓
+Isolated Leaf
+    ↓
+Disease Classification
 ```
+
+This should reduce the effect of irrelevant background information.
+
+### 🧠 Stronger Data Augmentation
+
+Future augmentation can include:
+
+- Random cropping
+- Blur
+- Image noise
+- Stronger brightness variation
+- Color perturbation
+- Background variation
+
+### 🎯 Confidence-Based Decision System
+
+Instead of always returning a disease prediction:
+
+```text
+High Confidence
+      ↓
+Show Prediction
+
+Low Confidence
+      ↓
+Request Better Image
+```
+
+This can make the system more reliable for real-world use.
+
+### 📈 Scalable Architecture
+
+The system can eventually be deployed as independent services:
+
+```text
+Next.js Frontend
+       ↓
+API Gateway
+       ↓
+FastAPI Inference Service
+       ↓
+Model Serving
+       ↓
+Database / Storage
+```
+
+This allows the frontend and ML inference service to scale independently.
+
+---
+
+## 🌍 Future Product Vision
+
+LeafLens AI can eventually evolve from a disease classifier into a complete **AI-powered plant health assistant**.
+
+Potential features include:
+
+- 🌿 Disease detection
+- 💊 Treatment recommendations
+- 📊 Disease severity estimation
+- ✂️ Leaf segmentation
+- 🌱 Multiple-leaf analysis
+- 📷 Plant health monitoring
+- 📚 Disease information
+- 🌐 Multilingual support
+- 📱 Mobile application
+- ⚡ Edge / offline inference
+
+---
+
+## 📚 References
+
+### Datasets
+
+**PlantVillage Dataset**
+
+https://github.com/spMohanty/PlantVillage-Dataset
+
+**PlantDoc Dataset**
+
+https://www.kaggle.com/datasets/abdulhasibuddin/plant-doc-dataset
+
+### Model
+
+**EfficientNet — Tan & Le (2019)**
+
+https://proceedings.mlr.press/v97/tan19a.html
+
+### TensorFlow / Keras
+
+**TensorFlow EfficientNetB0**
+
+https://www.tensorflow.org/api_docs/python/tf/keras/applications/EfficientNetB0
+
+**Keras EfficientNet Fine-Tuning**
+
+https://keras.io/examples/vision/image_classification_efficientnet_fine_tuning/
+
+---
+
+## 📌 Project Status
+
+**Current Stage: Working Prototype 🚀**
+
+The complete pipeline is currently functional locally:
+
+```text
+Image Upload
+     ↓
+Next.js
+     ↓
+FastAPI
+     ↓
+Image Preprocessing
+     ↓
+EfficientNetB0
+     ↓
+38-Class Prediction
+     ↓
+Confidence + Top-3
+     ↓
+Frontend Results
+```
+
+The next major focus is **improving real-world robustness, validating the model on more diverse images, and preparing the architecture for scalable deployment**.
