@@ -11,15 +11,15 @@
 ![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-Styling-cyan?logo=tailwindcss)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
----
-
 ## 📌 Overview
 
-**LeafLens AI** is an AI-powered plant disease detection system that identifies plant diseases from leaf images using **deep learning and computer vision**.
+**LeafLens AI** is an AI-powered plant health and disease detection system that analyzes leaf images using **deep learning and computer vision**.
 
-The project combines a modern **Next.js frontend** with a **FastAPI machine learning backend**. Users can upload a leaf image, which is processed by a trained **EfficientNetB0** model and classified into one of **38 plant disease or healthy classes**.
+The project combines a **Next.js frontend** with a **FastAPI machine-learning backend**. An uploaded image passes through an image localization and segmentation pipeline before being classified by an **ImageNet-pretrained EfficientNetB0** model.
 
-The current prototype focuses on building a reliable end-to-end pipeline from image upload to AI-powered prediction while keeping the architecture modular enough for future scaling.
+The current classifier supports **38 plant disease and healthy classes** and returns the predicted condition, confidence score, and top-3 predictions.
+
+The frontend also supports **multilingual localization**, allowing the user interface and disease information to be presented in multiple languages while keeping the ML backend language-independent and English-based.
 
 ---
 
@@ -27,197 +27,184 @@ The current prototype focuses on building a reliable end-to-end pipeline from im
 
 ### 🌿 AI Plant Disease Detection
 
-- **Image-based disease detection:** Upload plant leaf images for disease analysis.
-- **EfficientNetB0 classification:** Uses an ImageNet-pretrained EfficientNetB0 model.
-- **38-class classification:** Supports 38 plant disease and healthy classes.
-- **Confidence score:** Displays the confidence of the predicted class.
-- **Top-3 predictions:** Shows the three most likely predictions with confidence values.
+- Image-based plant disease detection.
+- EfficientNetB0-based image classification.
+- 38 disease and healthy classes.
+- Prediction confidence score.
+- Top-3 predictions with confidence values.
+- Disease-specific information including symptoms, causes, prevention, and treatment/care.
+
+### 🎯 Image Localization & Segmentation
+
+The image-processing pipeline includes **leaf localization and segmentation** before classification.
+
+```text
+Input Image
+     ↓
+Leaf Localization
+     ↓
+Leaf Segmentation
+     ↓
+Relevant Leaf Region
+     ↓
+Disease Classification
+```
+
+This helps reduce the influence of irrelevant background information and allows the classifier to focus on the plant leaf.
 
 ### 🖼️ Image Upload & Processing
 
 - Drag-and-drop image upload.
 - Image preview before prediction.
 - Image metadata display.
-- Automatic image conversion to RGB.
-- Image resizing to `224 × 224`.
+- RGB image conversion.
+- Image preprocessing and resizing.
 - Loading and prediction states.
 - Error handling.
 - Reset and re-upload functionality.
 
 ### 🧠 Machine Learning Pipeline
 
-- Transfer learning using **ImageNet-pretrained EfficientNetB0**.
-- Two-phase training:
+- ImageNet-pretrained EfficientNetB0.
+- Transfer learning.
+- Two-stage training:
   - Feature extraction
   - Fine-tuning
-- Data augmentation for better generalization.
-- Class weighting for handling class imbalance.
-- Mixed-precision training for improved GPU efficiency.
-- Early stopping to reduce overfitting.
-- Learning-rate reduction when validation performance plateaus.
-- Automatic checkpointing of the best model.
+- Data augmentation.
+- Class weighting for class imbalance.
+- Mixed-precision training.
+- Early stopping.
+- Learning-rate reduction.
+- Best-model checkpointing.
 
-### 🔌 FastAPI Inference Backend
+### 🌐 Multilingual Frontend
 
-- Dedicated `/predict` API endpoint.
-- Accepts images using `multipart/form-data`.
-- Loads the trained Keras model during server startup.
-- Performs image preprocessing and inference.
-- Returns structured JSON predictions.
+LeafLens AI supports localized frontend content so users can interact with the application in multiple languages.
+
+The localization layer is implemented in the **Next.js frontend**, while the **Python/FastAPI backend remains English-only**.
+
+This separation keeps the ML inference API simple while allowing the user-facing experience to be localized independently.
+
+Current localization includes:
+
+- English
+- Hindi
+- Additional Indian languages can be added through the same localization structure.
 
 ### 🎨 Modern Frontend
 
-- Built using **Next.js App Router**.
-- Responsive design for desktop and mobile.
-- Clean upload and prediction workflow.
-- Confidence bars for predictions.
-- User-friendly error handling.
+- Next.js App Router.
+- React 19.
+- TypeScript.
+- Tailwind CSS.
+- Responsive desktop and mobile UI.
+- Dark mode support.
+- Localized interface.
+- Confidence visualization.
 - Centralized API integration.
+- User-friendly error states.
 
 ---
 
 ## 📸 Screenshots
 
-### 🏠 Home Page (EN)
+### 🏠 Home Page — English
 
 ![LeafLens AI Home Page](./frontend/public/home_page_en.png)
 
-### 🏠 Home Page (HN)
+### 🏠 Home Page — Hindi
 
 ![LeafLens AI Home Page](./frontend/public/home_page_hn.png)
 
+### 📤 Prediction Result
 
-### 📤 Image Upload 
+![LeafLens AI Prediction](./frontend/public/response_en.png)
 
-![LeafLens AI Upload](./frontend/public/response_en.png)
+### 💡 Suggestions / Disease Information
 
-### 📤 Description
+![LeafLens AI Suggestions](./frontend/public/suggestions_en.png)
 
-![LeafLens AI Upload](./frontend/public/suggestions_en.png)
+---
 
+## 🧠 AI Pipeline
 
-## 🧠 Machine Learning Architecture
+The complete application pipeline is:
 
-The current model follows this pipeline:
+```text
+                    User Image
+                        ↓
+                 Next.js Frontend
+                        ↓
+               FastAPI /predict API
+                        ↓
+              Image Preprocessing
+                        ↓
+               Leaf Localization
+                        ↓
+               Leaf Segmentation
+                        ↓
+                 Relevant Leaf
+                        ↓
+               EfficientNetB0
+                        ↓
+                Global Average Pooling
+                        ↓
+                  Dropout (30%)
+                        ↓
+                 Dense Layer
+                  38 Classes
+                        ↓
+                    Softmax
+                        ↓
+              Disease Probabilities
+                        ↓
+             Top-3 Predictions
+                        ↓
+             Localized Frontend
+```
+
+---
+
+## 🔬 Model Architecture
 
 ```text
 Input Image
 224 × 224 × 3
-       ↓
+      ↓
 Data Augmentation
-       ↓
+      ↓
 EfficientNetB0
 ImageNet Pretrained
-       ↓
+      ↓
 Global Average Pooling
-       ↓
+      ↓
 Dropout (30%)
-       ↓
+      ↓
 Dense Layer
 38 Classes
-       ↓
+      ↓
 Softmax
-       ↓
+      ↓
 Disease Probabilities
 ```
 
-### 🔬 Training Strategy
+### Training Strategy
 
 The model is trained in two stages.
 
-### Phase 1 — Feature Extraction
+**Phase 1 — Feature Extraction**
 
-The pretrained EfficientNetB0 backbone is frozen while the newly added classification layer learns to classify plant diseases.
+The pretrained EfficientNetB0 backbone is frozen while the classification head learns the plant disease classes.
 
-### Phase 2 — Fine-Tuning
+**Phase 2 — Fine-Tuning**
 
-The later layers of EfficientNetB0 are unfrozen and trained using a smaller learning rate so that the pretrained features can adapt to plant disease patterns.
-
----
-
-## 🖼️ Data Augmentation
-
-The training pipeline applies:
-
-- Random horizontal and vertical flipping
-- Random rotation
-- Random zoom
-- Random translation
-- Random contrast
-- Random brightness
-
-These augmentations help the model handle variations in:
-
-- Leaf orientation
-- Position
-- Scale
-- Lighting
-- Contrast
-
-This is especially important for improving performance on real-world images.
-
----
-
-## ⚖️ Class Weighting
-
-The training pipeline uses Scikit-learn's:
-
-```python
-compute_class_weight()
-```
-
-to calculate balanced class weights.
-
-This helps prevent the model from becoming biased toward classes that contain more training examples.
-
----
-
-## ⚡ Training Optimizations
-
-### Mixed Precision
-
-```python
-mixed_precision.set_global_policy("mixed_float16")
-```
-
-Mixed precision reduces GPU memory usage and can improve training speed on compatible GPUs.
-
-### GPU Memory Growth
-
-TensorFlow dynamically allocates GPU memory instead of reserving all available memory at startup.
-
-### Dataset Prefetching
-
-```python
-tf.data.AUTOTUNE
-```
-
-is used to prepare batches efficiently while the model is training.
-
----
-
-## 🛡️ Overfitting Prevention
-
-The training pipeline uses several techniques:
-
-- **Dropout — 30%**
-- **EarlyStopping**
-- **ReduceLROnPlateau**
-- **ModelCheckpoint**
-- Data augmentation
-- Transfer learning
-
-The best-performing model based on validation accuracy is saved as:
-
-```text
-best_plant_disease_model.keras
-```
+Later layers of EfficientNetB0 are unfrozen and trained with a smaller learning rate so that pretrained features can adapt to plant disease patterns.
 
 ---
 
 ## 📊 Model Output
 
-The model produces probabilities for all 38 classes.
+The model returns the predicted disease, confidence, and top-3 predictions.
 
 Example:
 
@@ -248,7 +235,7 @@ Example:
 
 ### `POST /predict`
 
-Accepts a plant leaf image and returns the model prediction.
+Accepts a plant leaf image using `multipart/form-data` and returns a structured prediction.
 
 ### Request
 
@@ -275,6 +262,8 @@ file = <leaf image>
 }
 ```
 
+The backend API remains **English-only**. Localization is handled by the Next.js frontend.
+
 ---
 
 ## 🛠️ Tech Stack
@@ -285,10 +274,12 @@ file = <leaf image>
 - React 19
 - TypeScript
 - Tailwind CSS
+- next-intl / frontend localization
+- Dark mode
 
 ### Backend
 
-- Python
+- Python 3.10+
 - FastAPI
 - Uvicorn
 - Pillow
@@ -301,13 +292,11 @@ file = <leaf image>
 - NumPy
 - Scikit-learn
 
-### Model Training
+### Computer Vision
 
-- Transfer Learning
-- Fine-Tuning
-- Data Augmentation
-- Mixed Precision
-- Class Weighting
+- Image preprocessing
+- Leaf localization
+- Leaf segmentation
 
 ---
 
@@ -317,7 +306,6 @@ file = <leaf image>
 SIH/
 │
 ├── backend/
-│   │
 │   ├── main.py
 │   ├── predict.py
 │   ├── train.py
@@ -332,20 +320,21 @@ SIH/
 │   └── test/
 │
 ├── frontend/
-│   │
 │   ├── app/
-│   │
 │   ├── components/
-│   │   └── leaf-diagnosis.tsx
-│   │
 │   ├── lib/
-│   │   └── prediction-api.ts
-│   │
+│   ├── messages/
+│   │   ├── en.json
+│   │   └── hi.json
+│   ├── public/
+│   ├── i18n/
 │   ├── .env.example
 │   └── package.json
 │
 └── README.md
 ```
+
+> The exact frontend localization folder names may vary depending on the current Next.js project structure.
 
 ---
 
@@ -355,33 +344,28 @@ SIH/
 
 ```bash
 git clone <your-repository-url>
-
 cd SIH
 ```
 
----
-
 ### 2. Backend Setup
-
-Navigate to the backend:
 
 ```bash
 cd backend
 ```
 
-Create a Python virtual environment:
+Create a virtual environment:
 
 ```bash
 python -m venv venv
 ```
 
-### Windows
+#### Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-### Linux / Ubuntu
+#### Linux / Ubuntu
 
 ```bash
 source venv/bin/activate
@@ -404,8 +388,6 @@ Backend:
 ```text
 http://127.0.0.1:8000/
 ```
-
----
 
 ### 3. Frontend Setup
 
@@ -435,39 +417,6 @@ http://localhost:3000
 
 ---
 
-## 🧪 Testing the Model
-
-The project contains evaluation scripts for checking model performance.
-
-### Validation Dataset Evaluation
-
-```bash
-python evaluate_vald.py
-```
-
-This evaluates the model against the validation dataset and generates:
-
-- Accuracy
-- Classification report
-- Confusion matrix
-
-### Test Image Evaluation
-
-```bash
-python evaluate.py
-```
-
-This evaluates individual images stored inside the `test` directory and reports:
-
-- Actual class
-- Predicted class
-- Confidence
-- Overall test accuracy
-- Classification report
-- Confusion matrix
-
----
-
 ## 📈 Current Prototype
 
 The current prototype provides:
@@ -475,10 +424,16 @@ The current prototype provides:
 - ✅ End-to-end image upload
 - ✅ Next.js frontend
 - ✅ FastAPI backend
+- ✅ Leaf localization
+- ✅ Leaf segmentation
 - ✅ EfficientNetB0 classification
 - ✅ 38 disease/healthy classes
 - ✅ Top-3 predictions
 - ✅ Confidence scores
+- ✅ Disease information
+- ✅ Multilingual frontend localization
+- ✅ Hindi interface
+- ✅ Dark mode
 - ✅ Data augmentation
 - ✅ Transfer learning
 - ✅ Fine-tuning
@@ -489,120 +444,38 @@ The current prototype provides:
 
 The current validation accuracy is approximately **98.07%** on the current validation dataset.
 
-> **Note:** Validation accuracy does not guarantee the same performance on real-world images. Images with complex backgrounds, unusual lighting, blur, or multiple leaves can be more challenging.
+> **Note:** Validation accuracy does not guarantee the same performance on real-world images. Complex backgrounds, unusual lighting, blur, multiple leaves, and other uncontrolled conditions can affect predictions. A high softmax confidence score also does not necessarily guarantee that a prediction is correct.
 
 ---
 
 ## ⚠️ Current Limitations
 
-The current model can struggle with:
+The system may still struggle with:
 
 - Complex backgrounds
-- Poor lighting
-- Unusual lighting conditions
+- Poor or unusual lighting
 - Multiple leaves in one image
 - Very small leaves
 - Blurry images
 - Image noise
-- Objects other than the target leaf
-
-Additionally, a high softmax confidence score does not necessarily guarantee that the prediction is correct.
+- Images containing objects other than the target leaf
+- Real-world conditions that differ significantly from the training data
 
 ---
 
 ## 🔮 Future Improvements
 
-### 🌱 Improved Real-World Robustness
-
-The next training iterations will include more diverse field images containing:
-
-- Complex backgrounds
-- Different lighting conditions
-- Different camera qualities
-- Different leaf orientations
-- Different distances and angles
-
-### ✂️ Leaf Segmentation
-
-A future version can isolate the leaf before classification:
-
-```text
-User Image
-    ↓
-Leaf Detection / Segmentation
-    ↓
-Background Removal
-    ↓
-Isolated Leaf
-    ↓
-Disease Classification
-```
-
-This should reduce the effect of irrelevant background information.
-
-### 🧠 Stronger Data Augmentation
-
-Future augmentation can include:
-
-- Random cropping
-- Blur
-- Image noise
-- Stronger brightness variation
-- Color perturbation
-- Background variation
-
-### 🎯 Confidence-Based Decision System
-
-Instead of always returning a disease prediction:
-
-```text
-High Confidence
-      ↓
-Show Prediction
-
-Low Confidence
-      ↓
-Request Better Image
-```
-
-This can make the system more reliable for real-world use.
-
-### 📈 Scalable Architecture
-
-The system can eventually be deployed as independent services:
-
-```text
-Next.js Frontend
-       ↓
-API Gateway
-       ↓
-FastAPI Inference Service
-       ↓
-Model Serving
-       ↓
-Database / Storage
-```
-
-This allows the frontend and ML inference service to scale independently.
-
----
-
-## 🌍 Future Product Vision
-
-LeafLens AI can eventually evolve from a disease classifier into a complete **AI-powered plant health assistant**.
-
-Potential features include:
-
-- 🌿 Disease detection
-- 💊 Treatment recommendations
-- 📊 Disease severity estimation
-- ✂️ Leaf segmentation
-- 🌱 Multiple-leaf analysis
-- 📷 Plant health monitoring
-- 📚 Disease information
-- 🌐 Multilingual support
-- 📱 Mobile application
-- ⚡ Edge / offline inference
+- More diverse real-world field-image training data.
+- Improved leaf localization and segmentation.
+- Stronger robustness-focused augmentation.
+- Confidence-based image-quality feedback.
+- Disease severity estimation.
+- Multiple-leaf analysis.
+- Plant health monitoring over time.
+- Additional Indian language support.
+- Mobile application.
+- Edge/offline inference.
+- Scalable model-serving infrastructure.
 
 ---
 
@@ -610,28 +483,23 @@ Potential features include:
 
 ### Datasets
 
-**PlantVillage Dataset**
-
+**PlantVillage Dataset**  
 https://github.com/spMohanty/PlantVillage-Dataset
 
-**PlantDoc Dataset**
-
+**PlantDoc Dataset**  
 https://www.kaggle.com/datasets/abdulhasibuddin/plant-doc-dataset
 
 ### Model
 
-**EfficientNet — Tan & Le (2019)**
-
+**EfficientNet — Tan & Le (2019)**  
 https://proceedings.mlr.press/v97/tan19a.html
 
 ### TensorFlow / Keras
 
-**TensorFlow EfficientNetB0**
-
+**TensorFlow EfficientNetB0**  
 https://www.tensorflow.org/api_docs/python/tf/keras/applications/EfficientNetB0
 
-**Keras EfficientNet Fine-Tuning**
-
+**Keras EfficientNet Fine-Tuning**  
 https://keras.io/examples/vision/image_classification_efficientnet_fine_tuning/
 
 ---
@@ -640,16 +508,20 @@ https://keras.io/examples/vision/image_classification_efficientnet_fine_tuning/
 
 **Current Stage: Working Prototype 🚀**
 
-The complete pipeline is currently functional locally:
+LeafLens AI currently provides an end-to-end plant disease detection pipeline:
 
 ```text
 Image Upload
      ↓
-Next.js
+Next.js Frontend
      ↓
-FastAPI
+FastAPI Backend
      ↓
 Image Preprocessing
+     ↓
+Leaf Localization
+     ↓
+Leaf Segmentation
      ↓
 EfficientNetB0
      ↓
@@ -657,7 +529,15 @@ EfficientNetB0
      ↓
 Confidence + Top-3
      ↓
-Frontend Results
+Localized Disease Information
+     ↓
+Next.js Results UI
 ```
 
-The next major focus is **improving real-world robustness, validating the model on more diverse images, and preparing the architecture for scalable deployment**.
+The primary focus going forward is **improving real-world robustness, strengthening the localization and segmentation pipeline, expanding multilingual accessibility, and preparing the system for scalable deployment**.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
