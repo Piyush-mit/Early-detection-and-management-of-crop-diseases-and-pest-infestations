@@ -78,13 +78,22 @@ The current prototype focuses on building a reliable end-to-end pipeline from im
 
 ## 📸 Screenshots
 
-### 🏠 Home Page
+### 🏠 Home Page (EN)
 
-![LeafLens AI Home Page](./frontend/public/landingpage.png)
+![LeafLens AI Home Page](./frontend/public/home_page_en.png)
 
-### 📤 Image Upload and predicted results
+### 🏠 Home Page (HN)
 
-![LeafLens AI Upload](./frontend/public/response.png)
+![LeafLens AI Home Page](./frontend/public/home_page_hn.png)
+
+
+### 📤 Image Upload 
+
+![LeafLens AI Upload](./frontend/public/response_en.png)
+
+### 📤 Description
+
+![LeafLens AI Upload](./frontend/public/suggestions_en.png)
 
 
 ## 🧠 Machine Learning Architecture
