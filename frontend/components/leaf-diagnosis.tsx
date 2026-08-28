@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 
+import { PredictionResult } from "@/components/prediction-result";
 import {
   formatDiseaseName,
   predictLeaf,
@@ -388,6 +389,8 @@ export function LeafDiagnosis() {
           )}
         </aside>
       </section>
+
+      {result && <PredictionResult predictedClass={result.disease} />}
 
       <section
         id="how-it-works"
