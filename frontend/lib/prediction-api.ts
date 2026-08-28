@@ -54,21 +54,21 @@ export async function predictLeaf(file: File): Promise<PredictionResult> {
     });
   } catch {
     throw new Error(
-      "Unable to connect to the AI server. Please make sure the backend is running and try again.",
+      "connection",
     );
   }
 
   if (!response.ok) {
     if (response.status === 400 || response.status === 422) {
-      throw new Error("This image could not be analyzed. Please choose a clear leaf image and try again.");
+      throw new Error("invalidImage");
     }
 
-    throw new Error("The AI server could not analyze this image. Please try again shortly.");
+    throw new Error("server");
   }
 
   const data: unknown = await response.json().catch(() => null);
   if (!isPredictionResult(data)) {
-    throw new Error("The AI server returned an unexpected response. Please try again.");
+    throw new Error("unexpected");
   }
 
   return data;

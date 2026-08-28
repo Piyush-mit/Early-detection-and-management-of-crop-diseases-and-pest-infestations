@@ -7,8 +7,10 @@ import {
   Stethoscope,
   type LucideIcon,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
-import { DISEASE_DATA, type DiseaseInfo } from "@/lib/disease-info";
+import { getLocalizedDiseaseInfo } from "@/lib/disease-info";
+import { type Locale } from "@/i18n/routing";
 import { formatDiseaseName } from "@/lib/prediction-api";
 
 type PredictionResultProps = {
@@ -50,6 +52,8 @@ function DetailList({ title, items, icon: Icon, tone }: DetailListProps) {
 }
 
 function UnknownDiseaseDetails({ predictedClass }: PredictionResultProps) {
+  const t = useTranslations("PredictionResult");
+
   return (
     <section
       className="mx-auto w-full max-w-6xl px-5 pb-12 sm:px-8"
@@ -62,14 +66,13 @@ function UnknownDiseaseDetails({ predictedClass }: PredictionResultProps) {
           </span>
           <div>
             <p className="text-xs font-bold tracking-[.16em] text-emerald-700">
-              CONDITION GUIDE
+              {t("conditionEyebrow")}
             </p>
             <h2 id="disease-details-title" className="mt-1 text-lg font-semibold tracking-tight text-emerald-950">
-              Details are not available yet
+              {t("unknownTitle")}
             </h2>
             <p className="mt-1 leading-6 text-emerald-950/60">
-              The model identified {formatDiseaseName(predictedClass)}, but a
-              matching care guide has not been added to the disease dataset.
+              {t("unknownDescription", { disease: formatDiseaseName(predictedClass) })}
             </p>
           </div>
         </div>
@@ -78,36 +81,38 @@ function UnknownDiseaseDetails({ predictedClass }: PredictionResultProps) {
   );
 }
 
-function getDetailLabels(info: DiseaseInfo) {
-  if (info.is_healthy) {
+function getDetailLabels(isHealthy: boolean, t: ReturnType<typeof useTranslations>) {
+  if (isHealthy) {
     return {
-      eyebrow: "HEALTHY PLANT STATUS",
-      heading: "Your plant appears healthy",
-      summary: "Keep up these practices to help it stay healthy.",
-      symptoms: "Healthy indicators",
-      prevention: "Keep it healthy",
-      treatment: "Recommended care",
+      eyebrow: t("healthyEyebrow"),
+      heading: t("healthyHeading"),
+      summary: t("healthySummary"),
+      symptoms: t("healthyIndicators"),
+      prevention: t("keepHealthy"),
+      treatment: t("recommendedCare"),
     };
   }
 
   return {
-    eyebrow: "CONDITION GUIDE",
-    heading: "What to look for next",
-    summary: "Use these signs and practices to guide your next steps.",
-    symptoms: "Common symptoms",
-    prevention: "Prevention",
-    treatment: "Treatment and management",
+    eyebrow: t("conditionEyebrow"),
+    heading: t("conditionHeading"),
+    summary: t("conditionSummary"),
+    symptoms: t("commonSymptoms"),
+    prevention: t("prevention"),
+    treatment: t("treatment"),
   };
 }
 
 export function PredictionResult({ predictedClass }: PredictionResultProps) {
-  const info = DISEASE_DATA[predictedClass];
+  const t = useTranslations("PredictionResult");
+  const locale = useLocale() as Locale;
+  const info = getLocalizedDiseaseInfo(predictedClass, locale);
 
   if (!info) {
     return <UnknownDiseaseDetails predictedClass={predictedClass} />;
   }
 
-  const labels = getDetailLabels(info);
+  const labels = getDetailLabels(info.is_healthy, t);
   const StatusIcon = info.is_healthy ? BadgeCheck : AlertTriangle;
   const statusClasses = info.is_healthy
     ? "border-emerald-200/80 bg-emerald-50"
@@ -166,7 +171,7 @@ export function PredictionResult({ predictedClass }: PredictionResultProps) {
                 <span className="grid size-7 place-items-center rounded-lg bg-emerald-100 text-emerald-700">
                   <Bug className="size-4" aria-hidden="true" />
                 </span>
-                Likely cause
+                {t("likelyCause")}
               </h3>
               <p className="mt-2 text-sm leading-6 text-emerald-950/65">{info.cause}</p>
             </div>
@@ -197,8 +202,7 @@ export function PredictionResult({ predictedClass }: PredictionResultProps) {
 
           {!info.is_healthy && (
             <p className="mt-5 text-xs leading-5 text-emerald-950/55">
-              Confirm the diagnosis with local crop experts before applying any
-              treatment. Always follow product labels and local regulations.
+              {t("disclaimer")}
             </p>
           )}
         </div>

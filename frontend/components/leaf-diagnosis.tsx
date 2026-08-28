@@ -13,17 +13,31 @@ import {
   Upload,
   X,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { PredictionResult } from "@/components/prediction-result";
+import { getLocalizedDiseaseName } from "@/lib/disease-info";
+import { type Locale } from "@/i18n/routing";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import {
   formatDiseaseName,
   predictLeaf,
-  type PredictionResult as PredictionResultType ,
+  type PredictionResult as PredictionResultType,
 } from "@/lib/prediction-api";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const TRANSLATION_ERROR_KEYS = [
+  "connection",
+  "invalidImage",
+  "server",
+  "unexpected",
+] as const;
+
+function isTranslationError(value: string): value is (typeof TRANSLATION_ERROR_KEYS)[number] {
+  return TRANSLATION_ERROR_KEYS.includes(value as (typeof TRANSLATION_ERROR_KEYS)[number]);
+}
 
 type ImageDetails = {
   width: number;
@@ -59,6 +73,12 @@ function ConfidenceBar({
 }
 
 export function LeafDiagnosis() {
+  const t = useTranslations("LeafDiagnosis");
+  const navigation = useTranslations("Navigation");
+  const languages = useTranslations("Languages");
+  const locale = useLocale() as Locale;
+  const pathname = usePathname();
+  const router = useRouter();
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -84,15 +104,13 @@ export function LeafDiagnosis() {
     if (!nextFile) return;
 
     if (!ACCEPTED_TYPES.includes(nextFile.type)) {
-      setError("Please choose a JPG, JPEG, PNG, or WEBP image.");
+      setError(t("errors.invalidType"));
       setStatus("error");
       return;
     }
 
     if (nextFile.size > MAX_FILE_SIZE) {
-      setError(
-        "That image is larger than 10 MB. Please choose a smaller image.",
-      );
+      setError(t("errors.fileTooLarge"));
       setStatus("error");
       return;
     }
@@ -134,7 +152,7 @@ export function LeafDiagnosis() {
   const analyze = async () => {
     if (!file || status === "analyzing") {
       if (!file) {
-        setError("Choose a leaf image before starting an analysis.");
+        setError(t("errors.noFile"));
         setStatus("error");
       }
 
@@ -152,9 +170,9 @@ export function LeafDiagnosis() {
       setStatus("success");
     } catch (caughtError) {
       setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Something went wrong. Please try again.",
+        caughtError instanceof Error && isTranslationError(caughtError.message)
+          ? t(`errors.${caughtError.message}`)
+          : t("errors.generic"),
       );
       setStatus("error");
     }
@@ -176,28 +194,45 @@ export function LeafDiagnosis() {
           </span>
 
           <span>
-            LeafLens <span className="font-normal text-emerald-800">AI</span>
+            {t("brand")}
           </span>
         </a>
 
-        <nav
+        <div className="flex items-center gap-3 sm:gap-7">
+          <nav
           className="hidden items-center gap-7 text-sm font-medium text-emerald-950/70 sm:flex"
-          aria-label="Main navigation"
+          aria-label={navigation("mainNavigation")}
         >
           <a
             className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
             href="#analyze"
           >
-            Analyze
+            {navigation("analyze")}
           </a>
 
           <a
             className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
             href="#how-it-works"
           >
-            How it works
+            {navigation("howItWorks")}
           </a>
-        </nav>
+          </nav>
+          <label className="sr-only" htmlFor="language-selector">
+            {navigation("language")}
+          </label>
+          <select
+            id="language-selector"
+            value={locale}
+            onChange={(event) =>
+              router.replace(pathname, { locale: event.target.value as Locale })
+            }
+            className="rounded-lg border border-emerald-800/15 bg-white/75 px-2.5 py-1.5 text-sm font-medium text-emerald-800 shadow-sm outline-none transition focus:ring-2 focus:ring-emerald-600"
+          >
+            {(["en", "hi", "bn", "mr", "te"] as const).map((option) => (
+              <option key={option} value={option}>{languages(option)}</option>
+            ))}
+          </select>
+        </div>
       </header>
 
       <section
@@ -206,16 +241,15 @@ export function LeafDiagnosis() {
       >
         <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/75 px-3.5 py-1.5 text-xs font-semibold text-emerald-800 shadow-sm backdrop-blur">
           <Sparkles className="size-3.5" aria-hidden="true" />
-          Trained to recognize 38 plant conditions
+          {t("trained")}
         </div>
 
         <h1 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-[#14382a] sm:text-6xl">
-          See what your leaves are trying to tell you.
+          {t("heroTitle")}
         </h1>
 
         <p className="mx-auto mt-5 max-w-2xl text-pretty text-base leading-7 text-emerald-950/65 sm:text-lg">
-          Upload a clear leaf image and let our AI identify potential plant
-          diseases in seconds.
+          {t("heroDescription")}
         </p>
       </section>
 
@@ -227,11 +261,11 @@ export function LeafDiagnosis() {
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-bold tracking-[.16em] text-emerald-700">
-                LEAF ANALYSIS
+                {t("eyebrow")}
               </p>
 
               <h2 className="mt-1 text-xl font-semibold tracking-tight">
-                Upload a clear image of a plant leaf
+                {t("uploadTitle")}
               </h2>
             </div>
 
@@ -265,16 +299,15 @@ export function LeafDiagnosis() {
               </span>
 
               <span className="text-base font-semibold">
-                Drop your image here, or browse
+                {t("dropImage")}
               </span>
 
               <span className="mt-2 max-w-xs text-sm leading-6 text-emerald-950/55">
-                Use a well-lit, close-up image with the leaf in focus. Maximum
-                size: 10 MB.
+                {t("uploadHint")}
               </span>
 
               <span className="mt-5 rounded-lg border border-emerald-800/15 bg-white px-3 py-2 text-sm font-medium text-emerald-800">
-                Choose image
+                {t("chooseImage")}
               </span>
             </label>
           ) : (
@@ -282,7 +315,7 @@ export function LeafDiagnosis() {
               <div className="relative aspect-16/10 bg-emerald-950/5">
                 <img
                   src={previewUrl}
-                  alt={`Preview of ${file?.name ?? "uploaded leaf"}`}
+                  alt={t("previewAlt", { name: file?.name ?? t("fallbackPreviewName") })}
                   className="size-full object-cover"
                 />
 
@@ -291,10 +324,10 @@ export function LeafDiagnosis() {
                   onClick={reset}
                   disabled={status === "analyzing"}
                   className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white/95 px-3 py-2 text-sm font-medium text-emerald-950 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
-                  aria-label="Remove selected image"
+                  aria-label={t("removeImage")}
                 >
                   <X className="size-4" aria-hidden="true" />
-                  Remove
+                  {t("remove")}
                 </button>
               </div>
 
@@ -309,7 +342,7 @@ export function LeafDiagnosis() {
                   <p className="mt-0.5 text-xs text-emerald-950/55">
                     {imageDetails
                       ? `${imageDetails.width} × ${imageDetails.height} px`
-                      : "Reading image details…"}
+                      : t("readingImage")}
                   </p>
                 </div>
               </div>
@@ -339,12 +372,12 @@ export function LeafDiagnosis() {
                   className="size-4 animate-spin"
                   aria-hidden="true"
                 />
-                Analyzing your leaf…
+                {t("analyzingLeaf")}
               </>
             ) : (
               <>
                 <ScanSearch className="size-4" aria-hidden="true" />
-                Analyze leaf
+                {t("analyzeLeaf")}
               </>
             )}
           </button>
@@ -354,7 +387,7 @@ export function LeafDiagnosis() {
               className="mt-3 text-center text-sm text-emerald-950/60"
               role="status"
             >
-              AI is examining the image for disease patterns.
+              {t("analyzingStatus")}
             </p>
           )}
 
@@ -397,9 +430,9 @@ export function LeafDiagnosis() {
         className="relative z-10 mx-auto grid max-w-5xl gap-4 px-5 pb-16 sm:grid-cols-3 sm:px-8"
       >
         {[
-          "Upload a leaf photo",
-          "AI examines visual patterns",
-          "Review the predicted condition",
+          t("howUpload"),
+          t("howAi"),
+          t("howReview"),
         ].map((step, index) => (
           <div
             key={step}
@@ -415,13 +448,15 @@ export function LeafDiagnosis() {
       </section>
 
       <footer className="border-t border-emerald-900/10 px-5 py-6 text-center text-sm text-emerald-950/55">
-        LeafLens AI · Built with Next.js, FastAPI, and TensorFlow
+        {t("footer")}
       </footer>
     </main>
   );
 }
 
 function EmptyResultPanel() {
+  const t = useTranslations("LeafDiagnosis");
+
   return (
     <div className="flex min-h-96 flex-col justify-between">
       <div>
@@ -430,16 +465,15 @@ function EmptyResultPanel() {
         </span>
 
         <p className="mt-8 text-xs font-bold tracking-[.16em] text-emerald-200">
-          READY WHEN YOU ARE
+          {t("ready")}
         </p>
 
         <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-          Your diagnosis will appear here.
+          {t("emptyTitle")}
         </h2>
 
         <p className="mt-3 max-w-sm leading-7 text-emerald-50/70">
-          Upload a leaf image to see the predicted condition, confidence
-          score, and alternative matches.
+          {t("emptyDescription")}
         </p>
       </div>
 
@@ -448,13 +482,15 @@ function EmptyResultPanel() {
           className="mb-2 size-5 text-emerald-200"
           aria-hidden="true"
         />
-        For the best result, avoid heavy shadows and keep the leaf centered.
+        {t("emptyTip")}
       </div>
     </div>
   );
 }
 
 function LoadingPanel() {
+  const t = useTranslations("LeafDiagnosis");
+
   return (
     <div className="flex min-h-96 flex-col items-center justify-center text-center">
       <LoaderCircle
@@ -463,15 +499,15 @@ function LoadingPanel() {
       />
 
       <p className="mt-6 text-xs font-bold tracking-[.16em] text-emerald-200">
-        PROCESSING IMAGE
+        {t("processing")}
       </p>
 
       <h2 className="mt-2 text-2xl font-semibold">
-        Looking for disease patterns.
+        {t("loadingTitle")}
       </h2>
 
       <p className="mt-3 max-w-xs leading-7 text-emerald-50/70">
-        This usually takes only a few seconds.
+        {t("loadingDescription")}
       </p>
     </div>
   );
@@ -486,21 +522,24 @@ function ResultPanel({
   predictions: PredictionResultType["top_predictions"];
   onReset: () => void;
 }) {
+  const t = useTranslations("LeafDiagnosis");
+  const locale = useLocale() as Locale;
+
   return (
     <div>
       <p className="text-xs font-bold tracking-[.16em] text-emerald-200">
-        DIAGNOSIS
+        {t("diagnosis")}
       </p>
 
       <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight">
-        {formatDiseaseName(result.disease)}
+        {getLocalizedDiseaseName(result.disease, locale) ?? formatDiseaseName(result.disease)}
       </h2>
 
       <div className="mt-7 rounded-2xl bg-white p-5 text-[#17352a]">
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-xs font-bold tracking-[.15em] text-emerald-700">
-              CONFIDENCE
+              {t("confidence")}
             </p>
 
             <p className="mt-1 text-3xl font-semibold tracking-tight">
@@ -520,7 +559,7 @@ function ResultPanel({
       </div>
 
       <div className="mt-7">
-        <h3 className="text-sm font-semibold">Top predictions</h3>
+        <h3 className="text-sm font-semibold">{t("topPredictions")}</h3>
 
         <ol className="mt-3 space-y-3">
           {predictions.map((prediction: { disease: string; confidence: number; }, index: number) => (
@@ -538,7 +577,7 @@ function ResultPanel({
                     {index + 1}
                   </span>
 
-                  {formatDiseaseName(prediction.disease)}
+                  {getLocalizedDiseaseName(prediction.disease, locale) ?? formatDiseaseName(prediction.disease)}
                 </span>
 
                 <span className="shrink-0 text-sm font-semibold">
@@ -563,7 +602,7 @@ function ResultPanel({
         className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/25 px-4 py-3 text-sm font-semibold transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#173f2d]"
       >
         <RotateCcw className="size-4" aria-hidden="true" />
-        Analyze another image
+        {t("analyzeAnother")}
       </button>
     </div>
   );

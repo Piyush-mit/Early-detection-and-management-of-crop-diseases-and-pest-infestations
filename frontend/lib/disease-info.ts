@@ -1,3 +1,5 @@
+import type { Locale } from "@/i18n/routing";
+
 export type DiseaseInfo = {
   crop: string;
   disease_name: string;
@@ -793,3 +795,74 @@ export const DISEASE_DATA: Record<string, DiseaseInfo> = {
     ]
   }
 };
+
+type DiseaseDisplayTranslation = {
+  crop?: string;
+  disease_name?: string;
+  description?: string;
+  cause?: string;
+  symptoms?: string[];
+  prevention?: string[];
+  treatment?: string[];
+};
+
+type DiseaseTranslations = Partial<Record<Exclude<Locale, "en">, DiseaseDisplayTranslation>>;
+
+const DISEASE_TRANSLATIONS: Record<string, DiseaseTranslations> = {
+  "Apple___Apple_scab": {hi:{crop:"सेब",disease_name:"सेब का स्कैब"},bn:{crop:"আপেল",disease_name:"আপেল স্ক্যাব"},mr:{crop:"सफरचंद",disease_name:"सफरचंदावरील स्कॅब"},te:{crop:"ఆపిల్",disease_name:"ఆపిల్ స్కాబ్"}},
+  "Apple___Black_rot": {hi:{crop:"सेब",disease_name:"सेब का ब्लैक रॉट"},bn:{crop:"আপেল",disease_name:"আপেল ব্ল্যাক রট"},mr:{crop:"सफरचंद",disease_name:"सफरचंदाचा ब्लॅक रॉट"},te:{crop:"ఆపిల్",disease_name:"ఆపిల్ బ్లాక్ రాట్"}},
+  "Apple___Cedar_apple_rust": {hi:{crop:"सेब",disease_name:"सीडर एप्पल रस्ट"},bn:{crop:"আপেল",disease_name:"সিডার অ্যাপল রাস্ট"},mr:{crop:"सफरचंद",disease_name:"सिडार ॲपल रस्ट"},te:{crop:"ఆపిల్",disease_name:"సీడర్ ఆపిల్ రస్ట్"}},
+  "Apple___healthy": {hi:{crop:"सेब",disease_name:"स्वस्थ सेब"},bn:{crop:"আপেল",disease_name:"সুস্থ আপেল"},mr:{crop:"सफरचंद",disease_name:"निरोगी सफरचंद"},te:{crop:"ఆపిల్",disease_name:"ఆరోగ్యకరమైన ఆపిల్"}},
+  "Blueberry___healthy": {hi:{crop:"ब्लूबेरी",disease_name:"स्वस्थ ब्लूबेरी"},bn:{crop:"ব্লুবেরি",disease_name:"সুস্থ ব্লুবেরি"},mr:{crop:"ब्लूबेरी",disease_name:"निरोगी ब्लूबेरी"},te:{crop:"బ్లూబెర్రీ",disease_name:"ఆరోగ్యకరమైన బ్లూబెర్రీ"}},
+  "Cherry_(including_sour)___Powdery_mildew": {hi:{crop:"चेरी",disease_name:"चेरी का पाउडरी मिल्ड्यू"},bn:{crop:"চেরি",disease_name:"চেরির পাউডারি মিলডিউ"},mr:{crop:"चेरी",disease_name:"चेरीवरील पावडरी मिल्ड्यू"},te:{crop:"చెర్రీ",disease_name:"చెర్రీ పౌడరీ మిల్డ్యూ"}},
+  "Cherry_(including_sour)___healthy": {hi:{crop:"चेरी",disease_name:"स्वस्थ चेरी"},bn:{crop:"চেরি",disease_name:"সুস্থ চেরি"},mr:{crop:"चेरी",disease_name:"निरोगी चेरी"},te:{crop:"చెర్రీ",disease_name:"ఆరోగ్యకరమైన చెర్రీ"}},
+  "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {hi:{crop:"मक्का",disease_name:"ग्रे लीफ स्पॉट (सर्कोस्पोरा)"},bn:{crop:"ভুট্টা",disease_name:"গ্রে লিফ স্পট (সারকোস্পোরা)"},mr:{crop:"मका",disease_name:"ग्रे लीफ स्पॉट (सर्कोस्पोरा)"},te:{crop:"మొక్కజొన్న",disease_name:"గ్రే లీఫ్ స్పాట్ (సెర్కోస్పోరా)"}},
+  "Corn_(maize)___Common_rust_": {hi:{crop:"मक्का",disease_name:"सामान्य रतुआ"},bn:{crop:"ভুট্টা",disease_name:"সাধারণ রাস্ট"},mr:{crop:"मका",disease_name:"सामान्य तांबेरा"},te:{crop:"మొక్కజొన్న",disease_name:"సాధారణ రస్ట్"}},
+  "Corn_(maize)___Northern_Leaf_Blight": {hi:{crop:"मक्का",disease_name:"नॉर्दर्न कॉर्न लीफ ब्लाइट"},bn:{crop:"ভুট্টা",disease_name:"নর্দার্ন কর্ন লিফ ব্লাইট"},mr:{crop:"मका",disease_name:"नॉर्दर्न कॉर्न लीफ ब्लाइट"},te:{crop:"మొక్కజొన్న",disease_name:"నార్తర్న్ కార్న్ లీఫ్ బ్లైట్"}},
+  "Corn_(maize)___healthy": {hi:{crop:"मक्का",disease_name:"स्वस्थ मक्का"},bn:{crop:"ভুট্টা",disease_name:"সুস্থ ভুট্টা"},mr:{crop:"मका",disease_name:"निरोगी मका"},te:{crop:"మొక్కజొన్న",disease_name:"ఆరోగ్యకరమైన మొక్కజొన్న"}},
+  "Grape___Black_rot": {hi:{crop:"अंगूर",disease_name:"अंगूर का ब्लैक रॉट"},bn:{crop:"আঙুর",disease_name:"আঙুরের ব্ল্যাক রট"},mr:{crop:"द्राक्ष",disease_name:"द्राक्षांचा ब्लॅक रॉट"},te:{crop:"ద్రాక్ష",disease_name:"ద్రాక్ష బ్లాక్ రాట్"}},
+  "Grape___Esca_(Black_Measles)": {hi:{crop:"अंगूर",disease_name:"एस्का (ब्लैक मीजल्स)"},bn:{crop:"আঙুর",disease_name:"এস্কা (ব্ল্যাক মিজলস)"},mr:{crop:"द्राक्ष",disease_name:"एस्का (ब्लॅक मीझल्स)"},te:{crop:"ద్రాక్ష",disease_name:"ఎస్కా (బ్లాక్ మీజిల్స్)"}},
+  "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": {hi:{crop:"अंगूर",disease_name:"लीफ ब्लाइट (इसारियोप्सिस लीफ स्पॉट)"},bn:{crop:"আঙুর",disease_name:"লিফ ব্লাইট (ইসারিওপসিস লিফ স্পট)"},mr:{crop:"द्राक्ष",disease_name:"लीफ ब्लाइट (इसारिऑप्सिस लीफ स्पॉट)"},te:{crop:"ద్రాక్ష",disease_name:"లీఫ్ బ్లైట్ (ఇసారియోప్సిస్ లీఫ్ స్పాట్)"}},
+  "Grape___healthy": {hi:{crop:"अंगूर",disease_name:"स्वस्थ अंगूर"},bn:{crop:"আঙুর",disease_name:"সুস্থ আঙুর"},mr:{crop:"द्राक्ष",disease_name:"निरोगी द्राक्ष"},te:{crop:"ద్రాక్ష",disease_name:"ఆరోగ్యకరమైన ద్రాక్ష"}},
+  "Orange___Haunglongbing_(Citrus_greening)": {hi:{crop:"संतरा",disease_name:"ह्वांगलोंगबिंग (सिट्रस ग्रीनिंग)"},bn:{crop:"কমলা",disease_name:"হুয়াংলংবিং (সাইট্রাস গ্রিনিং)"},mr:{crop:"संत्रे",disease_name:"ह्वांगलोंगबिंग (सिट्रस ग्रीनिंग)"},te:{crop:"నారింజ",disease_name:"హువాంగ్‌లాంగ్‌బింగ్ (సిట్రస్ గ్రీనింగ్)"}},
+  "Peach___Bacterial_spot": {hi:{crop:"आड़ू",disease_name:"आड़ू का बैक्टीरियल स्पॉट"},bn:{crop:"পীচ",disease_name:"পীচের ব্যাকটেরিয়াল স্পট"},mr:{crop:"पीच",disease_name:"पीचवरील जिवाणू ठिपका"},te:{crop:"పీచ్",disease_name:"పీచ్ బ్యాక్టీరియల్ స్పాట్"}},
+  "Peach___healthy": {hi:{crop:"आड़ू",disease_name:"स्वस्थ आड़ू"},bn:{crop:"পীচ",disease_name:"সুস্থ পীচ"},mr:{crop:"पीच",disease_name:"निरोगी पीच"},te:{crop:"పీచ్",disease_name:"ఆరోగ్యకరమైన పీచ్"}},
+  "Pepper,_bell___Bacterial_spot": {hi:{crop:"शिमला मिर्च",disease_name:"बैक्टीरियल स्पॉट"},bn:{crop:"ক্যাপসিকাম",disease_name:"ব্যাকটেরিয়াল স্পট"},mr:{crop:"ढोबळी मिरची",disease_name:"जिवाणू ठिपका"},te:{crop:"బెల్ పెప్పర్",disease_name:"బ్యాక్టీరియల్ స్పాట్"}},
+  "Pepper,_bell___healthy": {hi:{crop:"शिमला मिर्च",disease_name:"स्वस्थ शिमला मिर्च"},bn:{crop:"ক্যাপসিকাম",disease_name:"সুস্থ ক্যাপসিকাম"},mr:{crop:"ढोबळी मिरची",disease_name:"निरोगी ढोबळी मिरची"},te:{crop:"బెల్ పెప్పర్",disease_name:"ఆరోగ్యకరమైన బెల్ పెప్పర్"}},
+  "Potato___Early_blight": {hi:{crop:"आलू",disease_name:"आलू का अर्ली ब्लाइट"},bn:{crop:"আলু",disease_name:"আলুর আর্লি ব্লাইট"},mr:{crop:"बटाटा",disease_name:"बटाट्यावरील अर्ली ब्लाइट"},te:{crop:"బంగాళాదుంప",disease_name:"బంగాళాదుంప అర్లీ బ్లైట్"}},
+  "Potato___Late_blight": {hi:{crop:"आलू",disease_name:"आलू का लेट ब्लाइट"},bn:{crop:"আলু",disease_name:"আলুর লেট ব্লাইট"},mr:{crop:"बटाटा",disease_name:"बटाट्यावरील लेट ब्लाइट"},te:{crop:"బంగాళాదుంప",disease_name:"బంగాళాదుంప లేట్ బ్లైట్"}},
+  "Potato___healthy": {hi:{crop:"आलू",disease_name:"स्वस्थ आलू"},bn:{crop:"আলু",disease_name:"সুস্থ আলু"},mr:{crop:"बटाटा",disease_name:"निरोगी बटाटा"},te:{crop:"బంగాళాదుంప",disease_name:"ఆరోగ్యకరమైన బంగాళాదుంప"}},
+  "Raspberry___healthy": {hi:{crop:"रास्पबेरी",disease_name:"स्वस्थ रास्पबेरी"},bn:{crop:"রাস্পবেরি",disease_name:"সুস্থ রাস্পবেরি"},mr:{crop:"रास्पबेरी",disease_name:"निरोगी रास्पबेरी"},te:{crop:"రాస్ప్‌బెర్రీ",disease_name:"ఆరోగ్యకరమైన రాస్ప్‌బెర్రీ"}},
+  "Soybean___healthy": {hi:{crop:"सोयाबीन",disease_name:"स्वस्थ सोयाबीन"},bn:{crop:"সয়াবিন",disease_name:"সুস্থ সয়াবিন"},mr:{crop:"सोयाबीन",disease_name:"निरोगी सोयाबीन"},te:{crop:"సోయాబీన్",disease_name:"ఆరోగ్యకరమైన సోయాబీన్"}},
+  "Squash___Powdery_mildew": {hi:{crop:"स्क्वैश",disease_name:"पाउडरी मिल्ड्यू"},bn:{crop:"স্কোয়াশ",disease_name:"পাউডারি মিলডিউ"},mr:{crop:"स्क्वॅश",disease_name:"पावडरी मिल्ड्यू"},te:{crop:"స్క్వాష్",disease_name:"పౌడరీ మిల్డ్యూ"}},
+  "Strawberry___Leaf_scorch": {hi:{crop:"स्ट्रॉबेरी",disease_name:"लीफ स्कॉर्च"},bn:{crop:"স্ট্রবেরি",disease_name:"লিফ স্কর্চ"},mr:{crop:"स्ट्रॉबेरी",disease_name:"लीफ स्कॉर्च"},te:{crop:"స్ట్రాబెర్రీ",disease_name:"లీఫ్ స్కార్చ్"}},
+  "Strawberry___healthy": {hi:{crop:"स्ट्रॉबेरी",disease_name:"स्वस्थ स्ट्रॉबेरी"},bn:{crop:"স্ট্রবেরি",disease_name:"সুস্থ স্ট্রবেরি"},mr:{crop:"स्ट्रॉबेरी",disease_name:"निरोगी स्ट्रॉबेरी"},te:{crop:"స్ట్రాబెర్రీ",disease_name:"ఆరోగ్యకరమైన స్ట్రాబెర్రీ"}},
+  "Tomato___Bacterial_spot": {hi:{crop:"टमाटर",disease_name:"टमाटर का बैक्टीरियल स्पॉट"},bn:{crop:"টমেটো",disease_name:"টমেটোর ব্যাকটেরিয়াল স্পট"},mr:{crop:"टोमॅटो",disease_name:"टोमॅटोवरील जिवाणू ठिपका"},te:{crop:"టమాటా",disease_name:"టమాటా బ్యాక్టీరియల్ స్పాట్"}},
+  "Tomato___Early_blight": {hi:{crop:"टमाटर",disease_name:"टमाटर का अर्ली ब्लाइट"},bn:{crop:"টমেটো",disease_name:"টমেটোর আর্লি ব্লাইট"},mr:{crop:"टोमॅटो",disease_name:"टोमॅटोवरील अर्ली ब्लाइट"},te:{crop:"టమాటా",disease_name:"టమాటా అర్లీ బ్లైట్"}},
+  "Tomato___Late_blight": {hi:{crop:"टमाटर",disease_name:"टमाटर का लेट ब्लाइट"},bn:{crop:"টমেটো",disease_name:"টমেটোর লেট ব্লাইট"},mr:{crop:"टोमॅटो",disease_name:"टोमॅटोवरील लेट ब्लाइट"},te:{crop:"టమాటా",disease_name:"టమాటా లేట్ బ్లైట్"}},
+  "Tomato___Leaf_Mold": {hi:{crop:"टमाटर",disease_name:"टमाटर लीफ मोल्ड"},bn:{crop:"টমেটো",disease_name:"টমেটো লিফ মোল্ড"},mr:{crop:"टोमॅटो",disease_name:"टोमॅटो लीफ मोल्ड"},te:{crop:"టమాటా",disease_name:"టమాటా లీఫ్ మోల్డ్"}},
+  "Tomato___Septoria_leaf_spot": {hi:{crop:"टमाटर",disease_name:"टमाटर सेप्टोरिया लीफ स्पॉट"},bn:{crop:"টমেটো",disease_name:"টমেটো সেপ্টোরিয়া লিফ স্পট"},mr:{crop:"टोमॅटो",disease_name:"टोमॅटो सेप्टोरिया लीफ स्पॉट"},te:{crop:"టమాటా",disease_name:"టమాటా సెప్టోరియా లీఫ్ స్పాట్"}},
+  "Tomato___Spider_mites Two-spotted_spider_mite": {hi:{crop:"टमाटर",disease_name:"टू-स्पॉटेड स्पाइडर माइट"},bn:{crop:"টমেটো",disease_name:"টু-স্পটেড স্পাইডার মাইট"},mr:{crop:"टोमॅटो",disease_name:"दोन ठिपक्यांचा स्पायडर माइट"},te:{crop:"టమాటా",disease_name:"టూ-స్పాటెడ్ స్పైడర్ మైట్"}},
+  "Tomato___Target_Spot": {hi:{crop:"टमाटर",disease_name:"टमाटर टारगेट स्पॉट"},bn:{crop:"টমেটো",disease_name:"টমেটো টার্গেট স্পট"},mr:{crop:"टोमॅटो",disease_name:"टोमॅटो टार्गेट स्पॉट"},te:{crop:"టమాటా",disease_name:"టమాటా టార్గెట్ స్పాట్"}},
+  "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {hi:{crop:"टमाटर",disease_name:"टमाटर येलो लीफ कर्ल वायरस"},bn:{crop:"টমেটো",disease_name:"টমেটো ইয়েলো লিফ কার্ল ভাইরাস"},mr:{crop:"टोमॅटो",disease_name:"टोमॅटो यलो लीफ कर्ल व्हायरस"},te:{crop:"టమాటా",disease_name:"టమాటా యెల్లో లీఫ్ కర్ల్ వైరస్"}},
+  "Tomato___Tomato_mosaic_virus": {hi:{crop:"टमाटर",disease_name:"टमाटर मोज़ेक वायरस"},bn:{crop:"টমেটো",disease_name:"টমেটো মোজাইক ভাইরাস"},mr:{crop:"टोमॅटो",disease_name:"टोमॅटो मोझॅक व्हायरस"},te:{crop:"టమాటా",disease_name:"టమాటా మొజాయిక్ వైరస్"}},
+  "Tomato___healthy": {hi:{crop:"टमाटर",disease_name:"स्वस्थ टमाटर"},bn:{crop:"টমেটো",disease_name:"সুস্থ টমেটো"},mr:{crop:"टोमॅटो",disease_name:"निरोगी टोमॅटो"},te:{crop:"టమాటా",disease_name:"ఆరోగ్యకరమైన టమాటా"}}
+};
+
+/**
+ * Localizes presentation data only. The English dataset and its stable backend
+ * identifiers remain unchanged, and English safely fills any missing fields.
+ */
+export function getLocalizedDiseaseInfo(
+  diseaseId: string,
+  locale: Locale,
+): DiseaseInfo | undefined {
+  const english = DISEASE_DATA[diseaseId];
+  if (!english || locale === "en") return english;
+
+  return { ...english, ...DISEASE_TRANSLATIONS[diseaseId]?.[locale] };
+}
+
+export function getLocalizedDiseaseName(diseaseId: string, locale: Locale): string | undefined {
+  return getLocalizedDiseaseInfo(diseaseId, locale)?.disease_name;
+}
