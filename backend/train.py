@@ -1,5 +1,6 @@
 import os
 import json
+from pathlib import Path
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import mixed_precision
@@ -17,8 +18,8 @@ if gpus:
 mixed_precision.set_global_policy("mixed_float16")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TRAIN_DIR = os.path.join(BASE_DIR, "New Plant Diseases Dataset(Augmented)", "train")
-VALID_DIR = os.path.join(BASE_DIR, "New Plant Diseases Dataset(Augmented)", "valid")
+TRAIN_DIR = os.path.join(BASE_DIR, "Segmented_Dataset", "train")
+VALID_DIR = os.path.join(BASE_DIR, "Segmented_Dataset", "valid")
 MODEL_DIR = os.path.join(BASE_DIR, "models")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
@@ -51,7 +52,7 @@ print(f"Total Classes Found: {num_classes}")
 with open(os.path.join(MODEL_DIR, "class_names.json"), "w") as f:
     json.dump(class_names, f, indent=4)
 
-train_labels = np.concatenate([labels.numpy() for _, labels in train_ds], axis=0)
+train_labels = [train_ds.class_names.index(Path(p).parent.name) for p in train_ds.file_paths]
 class_weights_array = compute_class_weight(
     class_weight="balanced",
     classes=np.unique(train_labels),
@@ -67,11 +68,10 @@ valid_ds = valid_ds.prefetch(AUTOTUNE)
 data_augmentation = tf.keras.Sequential(
     [
         tf.keras.layers.RandomFlip("horizontal_and_vertical"),
-        tf.keras.layers.RandomRotation(0.2),
-        tf.keras.layers.RandomZoom(0.2),
-        tf.keras.layers.RandomTranslation(0.15, 0.15),
+        tf.keras.layers.RandomRotation(0.15),
+        tf.keras.layers.RandomZoom(0.15),
+        tf.keras.layers.RandomTranslation(0.1, 0.1),
         tf.keras.layers.RandomContrast(0.2),
-        tf.keras.layers.RandomBrightness(factor=0.2),  # Handles varying outdoor lighting
     ],
     name="data_augmentation"
 )
