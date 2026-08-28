@@ -19,7 +19,7 @@ import { PredictionResult } from "@/components/prediction-result";
 import {
   formatDiseaseName,
   predictLeaf,
-  type PredictionResult,
+  type PredictionResult as PredictionResultType ,
 } from "@/lib/prediction-api";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -68,7 +68,7 @@ export function LeafDiagnosis() {
   const [status, setStatus] = useState<
     "idle" | "selected" | "analyzing" | "success" | "error"
   >("idle");
-  const [result, setResult] = useState<PredictionResult | null>(null);
+  const [result, setResult] = useState<PredictionResultType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -164,7 +164,7 @@ export function LeafDiagnosis() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#f6faf6] text-[#17352a]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-0 h-[34rem] bg-[radial-gradient(circle_at_20%_10%,rgba(161,218,179,.42),transparent_26rem),radial-gradient(circle_at_85%_15%,rgba(224,242,205,.85),transparent_25rem)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-136 bg-[radial-gradient(circle_at_20%_10%,rgba(161,218,179,.42),transparent_26rem),radial-gradient(circle_at_85%_15%,rgba(224,242,205,.85),transparent_25rem)]" />
 
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
         <a
@@ -279,7 +279,7 @@ export function LeafDiagnosis() {
             </label>
           ) : (
             <div className="overflow-hidden rounded-2xl border border-emerald-900/10 bg-[#fbfdf9]">
-              <div className="relative aspect-[16/10] bg-emerald-950/5">
+              <div className="relative aspect-16/10 bg-emerald-950/5">
                 <img
                   src={previewUrl}
                   alt={`Preview of ${file?.name ?? "uploaded leaf"}`}
@@ -482,8 +482,8 @@ function ResultPanel({
   predictions,
   onReset,
 }: {
-  result: PredictionResult;
-  predictions: PredictionResult["top_predictions"];
+  result: PredictionResultType;
+  predictions: PredictionResultType["top_predictions"];
   onReset: () => void;
 }) {
   return (
@@ -523,7 +523,7 @@ function ResultPanel({
         <h3 className="text-sm font-semibold">Top predictions</h3>
 
         <ol className="mt-3 space-y-3">
-          {predictions.map((prediction, index) => (
+          {predictions.map((prediction: { disease: string; confidence: number; }, index: number) => (
             <li
               key={`${prediction.disease}-${index}`}
               className={`rounded-xl border p-3 ${
