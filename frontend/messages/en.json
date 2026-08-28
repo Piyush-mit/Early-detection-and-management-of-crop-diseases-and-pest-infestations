@@ -1,5 +1,5 @@
 {
-  "Navigation": {"analyze": "Analyze", "howItWorks": "How it works", "language": "Language", "mainNavigation": "Main navigation"},
+  "Navigation": {"analyze": "Analyze", "howItWorks": "How it works", "language": "Language", "mainNavigation": "Main navigation", "themeToggle": "Toggle dark mode"},
   "Languages": {"en": "English", "hi": "हिन्दी", "bn": "বাংলা", "mr": "मराठी", "te": "తెలుగు"},
   "LeafDiagnosis": {
     "brand": "LeafLens AI", "trained": "Trained to recognize 38 plant conditions", "heroTitle": "See what your leaves are trying to tell you.", "heroDescription": "Upload a clear leaf image and let our AI identify potential plant diseases in seconds.",

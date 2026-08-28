@@ -6,14 +6,17 @@ import {
   FileImage,
   Leaf,
   LoaderCircle,
+  Moon,
   RotateCcw,
   ScanSearch,
   ShieldCheck,
   Sparkles,
   Upload,
   X,
+  Sun,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { useTheme } from "@teispace/next-themes";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { PredictionResult } from "@/components/prediction-result";
@@ -63,9 +66,8 @@ function ConfidenceBar({
       aria-hidden="true"
     >
       <div
-        className={`h-full rounded-full ${
-          emphasis ? "bg-emerald-600" : "bg-emerald-500/65"
-        }`}
+        className={`h-full rounded-full ${emphasis ? "bg-emerald-600" : "bg-emerald-500/65"
+          }`}
         style={{ width: `${value}%` }}
       />
     </div>
@@ -79,6 +81,7 @@ export function LeafDiagnosis() {
   const locale = useLocale() as Locale;
   const pathname = usePathname();
   const router = useRouter();
+  const { resolvedTheme, setTheme } = useTheme();
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -91,7 +94,11 @@ export function LeafDiagnosis() {
   const [result, setResult] = useState<PredictionResultType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   useEffect(() => {
     return () => {
       if (previewUrl) {
@@ -181,13 +188,13 @@ export function LeafDiagnosis() {
   const predictions = result?.top_predictions.slice(0, 3) ?? [];
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#f6faf6] text-[#17352a]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-136 bg-[radial-gradient(circle_at_20%_10%,rgba(161,218,179,.42),transparent_26rem),radial-gradient(circle_at_85%_15%,rgba(224,242,205,.85),transparent_25rem)]" />
+    <main className="min-h-screen overflow-hidden bg-[#f6faf6] text-[#17352a] dark:bg-[#07110c] dark:text-emerald-50">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-136 bg-[radial-gradient(circle_at_20%_10%,rgba(161,218,179,.42),transparent_26rem),radial-gradient(circle_at_85%_15%,rgba(224,242,205,.85),transparent_25rem)] dark:bg-[radial-gradient(circle_at_20%_10%,rgba(22,101,52,.28),transparent_26rem),radial-gradient(circle_at_85%_15%,rgba(20,83,45,.24),transparent_25rem)]" />
 
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
         <a
           href="#top"
-          className="flex items-center gap-2.5 rounded-lg font-semibold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-4"
+          className="flex items-center gap-2.5 rounded-lg font-semibold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-4 dark:focus-visible:ring-offset-[#07110c]"
         >
           <span className="grid size-10 place-items-center rounded-xl bg-emerald-700 text-white shadow-sm">
             <Leaf className="size-5" aria-hidden="true" />
@@ -200,22 +207,22 @@ export function LeafDiagnosis() {
 
         <div className="flex items-center gap-3 sm:gap-7">
           <nav
-          className="hidden items-center gap-7 text-sm font-medium text-emerald-950/70 sm:flex"
-          aria-label={navigation("mainNavigation")}
-        >
-          <a
-            className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-            href="#analyze"
+            className="hidden items-center gap-7 text-sm font-medium text-emerald-950/70 dark:text-emerald-50/70 sm:flex"
+            aria-label={navigation("mainNavigation")}
           >
-            {navigation("analyze")}
-          </a>
+            <a
+              className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+              href="#analyze"
+            >
+              {navigation("analyze")}
+            </a>
 
-          <a
-            className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-            href="#how-it-works"
-          >
-            {navigation("howItWorks")}
-          </a>
+            <a
+              className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+              href="#how-it-works"
+            >
+              {navigation("howItWorks")}
+            </a>
           </nav>
           <label className="sr-only" htmlFor="language-selector">
             {navigation("language")}
@@ -226,12 +233,25 @@ export function LeafDiagnosis() {
             onChange={(event) =>
               router.replace(pathname, { locale: event.target.value as Locale })
             }
-            className="rounded-lg border border-emerald-800/15 bg-white/75 px-2.5 py-1.5 text-sm font-medium text-emerald-800 shadow-sm outline-none transition focus:ring-2 focus:ring-emerald-600"
+            className="rounded-lg border border-emerald-800/15 bg-white/75 px-2.5 py-1.5 text-sm font-medium text-emerald-800 shadow-sm outline-none transition focus:ring-2 focus:ring-emerald-600 dark:border-white/10 dark:bg-[#13261d] dark:text-emerald-100"
           >
             {(["en", "hi", "bn", "mr", "te"] as const).map((option) => (
               <option key={option} value={option}>{languages(option)}</option>
             ))}
           </select>
+          <button
+            type="button"
+            onClick={() => setTheme(mounted && resolvedTheme === "dark" ? "light" : "dark")}
+            className="grid size-9 place-items-center rounded-lg border border-emerald-800/15 bg-white/75 text-emerald-800 shadow-sm transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 dark:border-white/10 dark:bg-[#13261d] dark:text-emerald-100 dark:hover:bg-[#173024]"
+            aria-label={navigation("themeToggle")}
+            title={navigation("themeToggle")}
+          >
+            {mounted && resolvedTheme === "dark" ? (
+              <Sun className="size-4" aria-hidden="true" />
+            ) : (
+              <Moon className="size-4" aria-hidden="true" />
+            )}
+          </button>
         </div>
       </header>
 
@@ -239,16 +259,16 @@ export function LeafDiagnosis() {
         id="top"
         className="relative z-10 mx-auto max-w-4xl px-5 pb-10 pt-12 text-center sm:px-8 sm:pt-20"
       >
-        <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/75 px-3.5 py-1.5 text-xs font-semibold text-emerald-800 shadow-sm backdrop-blur">
+        <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-800/10 bg-white/75 px-3.5 py-1.5 text-xs font-semibold text-emerald-800 shadow-sm backdrop-blur dark:border-white/10 dark:bg-[#13261d]/85 dark:text-emerald-100">
           <Sparkles className="size-3.5" aria-hidden="true" />
           {t("trained")}
         </div>
 
-        <h1 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-[#14382a] sm:text-6xl">
+        <h1 className="text-balance text-4xl font-semibold tracking-[-0.045em] text-[#14382a] dark:text-emerald-50 sm:text-6xl">
           {t("heroTitle")}
         </h1>
 
-        <p className="mx-auto mt-5 max-w-2xl text-pretty text-base leading-7 text-emerald-950/65 sm:text-lg">
+        <p className="mx-auto mt-5 max-w-2xl text-pretty text-base leading-7 text-emerald-950/65 dark:text-emerald-100/65 sm:text-lg">
           {t("heroDescription")}
         </p>
       </section>
@@ -257,7 +277,7 @@ export function LeafDiagnosis() {
         id="analyze"
         className="relative z-10 mx-auto grid w-full max-w-6xl gap-6 px-5 pb-12 sm:px-8 lg:grid-cols-[1.08fr_.92fr]"
       >
-        <div className="rounded-[1.75rem] border border-emerald-900/10 bg-white p-4 shadow-[0_20px_50px_-30px_rgba(18,83,48,.35)] sm:p-6">
+        <div className="rounded-[1.75rem] border border-emerald-900/10 bg-white p-4 shadow-[0_20px_50px_-30px_rgba(18,83,48,.35)] dark:border-white/10 dark:bg-[#102018] dark:shadow-[0_20px_50px_-30px_rgba(0,0,0,.6)] sm:p-6">
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-bold tracking-[.16em] text-emerald-700">
@@ -269,7 +289,7 @@ export function LeafDiagnosis() {
               </h2>
             </div>
 
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">
+            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-100">
               JPG, PNG, WEBP
             </span>
           </div>
@@ -288,11 +308,10 @@ export function LeafDiagnosis() {
                 setIsDragging(false);
                 selectFile(event.dataTransfer.files[0]);
               }}
-              className={`flex min-h-80 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 text-center transition ${
-                isDragging
-                  ? "border-emerald-600 bg-emerald-50"
-                  : "border-emerald-900/15 bg-[#fbfdf9] hover:border-emerald-500 hover:bg-emerald-50/50"
-              }`}
+              className={`flex min-h-80 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 text-center transition ${isDragging
+                  ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-950/50"
+                  : "border-emerald-900/15 bg-[#fbfdf9] hover:border-emerald-500 hover:bg-emerald-50/50 dark:border-white/10 dark:bg-[#13261d] dark:hover:border-emerald-500 dark:hover:bg-emerald-950/35"
+                }`}
             >
               <span className="mb-4 grid size-16 place-items-center rounded-2xl bg-emerald-100 text-emerald-700">
                 <Upload className="size-7" aria-hidden="true" />
@@ -302,16 +321,16 @@ export function LeafDiagnosis() {
                 {t("dropImage")}
               </span>
 
-              <span className="mt-2 max-w-xs text-sm leading-6 text-emerald-950/55">
+              <span className="mt-2 max-w-xs text-sm leading-6 text-emerald-950/55 dark:text-emerald-100/65">
                 {t("uploadHint")}
               </span>
 
-              <span className="mt-5 rounded-lg border border-emerald-800/15 bg-white px-3 py-2 text-sm font-medium text-emerald-800">
+              <span className="mt-5 rounded-lg border border-emerald-800/15 bg-white px-3 py-2 text-sm font-medium text-emerald-800 dark:border-white/10 dark:bg-[#173024] dark:text-emerald-100">
                 {t("chooseImage")}
               </span>
             </label>
           ) : (
-            <div className="overflow-hidden rounded-2xl border border-emerald-900/10 bg-[#fbfdf9]">
+            <div className="overflow-hidden rounded-2xl border border-emerald-900/10 bg-[#fbfdf9] dark:border-white/10 dark:bg-[#13261d]">
               <div className="relative aspect-16/10 bg-emerald-950/5">
                 <img
                   src={previewUrl}
@@ -323,7 +342,7 @@ export function LeafDiagnosis() {
                   type="button"
                   onClick={reset}
                   disabled={status === "analyzing"}
-                  className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white/95 px-3 py-2 text-sm font-medium text-emerald-950 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white/95 px-3 py-2 text-sm font-medium text-emerald-950 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#173024]/95 dark:text-emerald-50 dark:hover:bg-[#1b3829]"
                   aria-label={t("removeImage")}
                 >
                   <X className="size-4" aria-hidden="true" />
@@ -339,7 +358,7 @@ export function LeafDiagnosis() {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold">{file?.name}</p>
 
-                  <p className="mt-0.5 text-xs text-emerald-950/55">
+                  <p className="mt-0.5 text-xs text-emerald-950/55 dark:text-emerald-100/65">
                     {imageDetails
                       ? `${imageDetails.width} × ${imageDetails.height} px`
                       : t("readingImage")}
@@ -384,7 +403,7 @@ export function LeafDiagnosis() {
 
           {status === "analyzing" && (
             <p
-              className="mt-3 text-center text-sm text-emerald-950/60"
+              className="mt-3 text-center text-sm text-emerald-950/60 dark:text-emerald-100/65"
               role="status"
             >
               {t("analyzingStatus")}
@@ -393,7 +412,7 @@ export function LeafDiagnosis() {
 
           {error && (
             <div
-              className="mt-4 flex gap-3 rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-800"
+              className="mt-4 flex gap-3 rounded-xl border border-red-200 bg-red-50 p-3.5 text-sm text-red-800 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200"
               role="alert"
             >
               <AlertCircle
@@ -406,7 +425,7 @@ export function LeafDiagnosis() {
         </div>
 
         <aside
-          className="rounded-[1.75rem] border border-emerald-900/10 bg-[#173f2d] p-5 text-white shadow-[0_20px_50px_-30px_rgba(18,83,48,.5)] sm:p-7"
+          className="rounded-[1.75rem] border border-emerald-900/10 bg-[#173f2d] p-5 text-white shadow-[0_20px_50px_-30px_rgba(18,83,48,.5)] dark:border-emerald-300/10 dark:bg-[#102018] dark:shadow-[0_20px_50px_-30px_rgba(0,0,0,.7)] sm:p-7"
           aria-live="polite"
         >
           {status === "analyzing" ? (
@@ -436,18 +455,18 @@ export function LeafDiagnosis() {
         ].map((step, index) => (
           <div
             key={step}
-            className="rounded-2xl border border-emerald-900/10 bg-white/60 p-5"
+            className="rounded-2xl border border-emerald-900/10 bg-white/60 p-5 dark:border-white/10 dark:bg-[#102018]/80"
           >
             <span className="text-xs font-bold tracking-[.15em] text-emerald-700">
               0{index + 1}
             </span>
 
-            <p className="mt-2 font-medium text-emerald-950">{step}</p>
+            <p className="mt-2 font-medium text-emerald-950 dark:text-emerald-50">{step}</p>
           </div>
         ))}
       </section>
 
-      <footer className="border-t border-emerald-900/10 px-5 py-6 text-center text-sm text-emerald-950/55">
+      <footer className="border-t border-emerald-900/10 px-5 py-6 text-center text-sm text-emerald-950/55 dark:border-white/10 dark:text-emerald-100/60">
         {t("footer")}
       </footer>
     </main>
@@ -565,11 +584,10 @@ function ResultPanel({
           {predictions.map((prediction: { disease: string; confidence: number; }, index: number) => (
             <li
               key={`${prediction.disease}-${index}`}
-              className={`rounded-xl border p-3 ${
-                index === 0
+              className={`rounded-xl border p-3 ${index === 0
                   ? "border-emerald-300 bg-white/10"
                   : "border-white/10 bg-white/5"
-              }`}
+                }`}
             >
               <div className="flex items-baseline justify-between gap-3">
                 <span className="min-w-0 truncate text-sm font-medium">

@@ -3,6 +3,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 
 import "../globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 import { routing } from "@/i18n/routing";
 
 export const metadata: Metadata = {
@@ -25,9 +26,11 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} className="h-full antialiased">
+    <html lang={locale} className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <ThemeProvider>
+          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
