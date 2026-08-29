@@ -11,7 +11,6 @@ def process_and_save_dataset(input_dir, output_dir, session=None):
     
     extensions = ['*.JPG', '*.jpg', '*.png', '*.PNG', '*.jpeg', '*.JPEG']
     
-    # 1. Collect all image paths first to get an accurate total count
     print("Collecting files...")
     all_files = []
     for ext in extensions:
@@ -34,7 +33,7 @@ def process_and_save_dataset(input_dir, output_dir, session=None):
         out_file_path = output_path / relative_path
         out_file_path.parent.mkdir(parents=True, exist_ok=True)
         
-        # Resume capability: skip if already processed
+
         if out_file_path.exists():
             skipped_count += 1
             processed_count += 1
@@ -48,10 +47,8 @@ def process_and_save_dataset(input_dir, output_dir, session=None):
                 error_count += 1
                 continue
                 
-            # Segmentation via rembg (reusing session saves initialization overhead)
             segmented_img = remove(img, session=session) if session else remove(img)
             
-            # Find bounding box from mask/alpha
             if segmented_img.shape[2] == 4:
                 alpha = segmented_img[:, :, 3]
                 _, thresh = cv2.threshold(alpha, 1, 255, cv2.THRESH_BINARY)
@@ -66,7 +63,6 @@ def process_and_save_dataset(input_dir, output_dir, session=None):
                 x, y, w, h = cv2.boundingRect(largest_contour)
                 cropped_leaf = segmented_img[y:y+h, x:x+w]
                 
-                # Composite over black background to preserve 3-channel BGR format
                 if cropped_leaf.shape[2] == 4:
                     black_bg = np.zeros((h, w, 3), dtype=np.uint8)
                     alpha_channel = cropped_leaf[:, :, 3] / 255.0
@@ -120,7 +116,6 @@ if __name__ == "__main__":
     OUT_TRAIN = os.path.join(BASE_DIR, "Segmented_Dataset", "train")
     OUT_VALID = os.path.join(BASE_DIR, "Segmented_Dataset", "valid")
     
-    # Initialize a persistent rembg session for speed
     session = new_session("u2net", providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
     
     if os.path.exists(TRAIN_DIR):

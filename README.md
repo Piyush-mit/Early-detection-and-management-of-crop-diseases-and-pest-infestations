@@ -11,6 +11,23 @@
 ![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-Styling-cyan?logo=tailwindcss)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
+## 🎯 Problem Statement
+
+Plant diseases can significantly affect crop health and agricultural productivity,
+especially when symptoms are not identified at an early stage. Farmers may not
+always have immediate access to agricultural experts for identifying diseases
+from visible symptoms.
+
+LeafLens AI aims to provide a fast and accessible preliminary plant-health
+assessment using leaf images. By combining computer vision, leaf localization
+and segmentation, and deep-learning-based disease classification, the system
+helps users identify potential plant diseases and understand the recommended
+care and preventive measures.
+
+The goal is to make AI-assisted plant disease identification more accessible,
+while keeping the system simple enough to be used through a web interface.
+
+
 ## 📌 Overview
 
 **LeafLens AI** is an AI-powered plant health and disease detection system that analyzes leaf images using **deep learning and computer vision**.
@@ -338,83 +355,6 @@ SIH/
 
 ---
 
-## 🚀 Getting Started
-
-### 1. Clone the Repository
-
-```bash
-git clone <your-repository-url>
-cd SIH
-```
-
-### 2. Backend Setup
-
-```bash
-cd backend
-```
-
-Create a virtual environment:
-
-```bash
-python -m venv venv
-```
-
-#### Windows
-
-```bash
-venv\Scripts\activate
-```
-
-#### Linux / Ubuntu
-
-```bash
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Start the FastAPI server:
-
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-Backend:
-
-```text
-http://127.0.0.1:8000/
-```
-
-### 3. Frontend Setup
-
-Open another terminal:
-
-```bash
-cd frontend
-```
-
-Install dependencies:
-
-```bash
-bun install
-```
-
-Start the development server:
-
-```bash
-bun run dev
-```
-
-Frontend:
-
-```text
-http://localhost:3000
-```
-
 ---
 
 ## 📈 Current Prototype
@@ -448,18 +388,15 @@ The current validation accuracy is approximately **98.07%** on the current valid
 
 ---
 
-## ⚠️ Current Limitations
+## ⚙️ How It Works
 
-The system may still struggle with:
-
-- Complex backgrounds
-- Poor or unusual lighting
-- Multiple leaves in one image
-- Very small leaves
-- Blurry images
-- Image noise
-- Images containing objects other than the target leaf
-- Real-world conditions that differ significantly from the training data
+1. **Upload** — The user uploads an image of a plant leaf.
+2. **Localization** — The relevant leaf region is identified.
+3. **Segmentation** — The leaf is isolated from irrelevant background regions.
+4. **Preprocessing** — The image is converted and resized for model inference.
+5. **Classification** — EfficientNetB0 predicts the plant's health condition.
+6. **Ranking** — The system generates the top-3 predictions and confidence scores.
+7. **Presentation** — Disease information is displayed in the user's selected language.
 
 ---
 
@@ -479,30 +416,6 @@ The system may still struggle with:
 
 ---
 
-## 📚 References
-
-### Datasets
-
-**PlantVillage Dataset**  
-https://github.com/spMohanty/PlantVillage-Dataset
-
-**PlantDoc Dataset**  
-https://www.kaggle.com/datasets/abdulhasibuddin/plant-doc-dataset
-
-### Model
-
-**EfficientNet — Tan & Le (2019)**  
-https://proceedings.mlr.press/v97/tan19a.html
-
-### TensorFlow / Keras
-
-**TensorFlow EfficientNetB0**  
-https://www.tensorflow.org/api_docs/python/tf/keras/applications/EfficientNetB0
-
-**Keras EfficientNet Fine-Tuning**  
-https://keras.io/examples/vision/image_classification_efficientnet_fine_tuning/
-
----
 
 ## 📌 Project Status
 
@@ -538,6 +451,3 @@ The primary focus going forward is **improving real-world robustness, strengthen
 
 ---
 
-## 📄 License
-
-This project is licensed under the **MIT License**.
